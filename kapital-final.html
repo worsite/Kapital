@@ -1,0 +1,1678 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Kapital — Moda urbana colombiana. Colecciones de alto impacto desde Santa Rosa de Cabal.">
+  <title>Kapital — Urban Collective</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Playfair+Display:wght@600;700;800&display=swap" rel="stylesheet">
+
+  <style>
+    /* ═══════════════════════════════════════════════
+       DESIGN TOKENS
+       ═══════════════════════════════════════════════ */
+    :root {
+      --bg-primary:      #0a0a0a;
+      --bg-secondary:    #121212;
+      --bg-tertiary:     #1a1a1a;
+      --bg-surface:      #1f1f1f;
+      --accent-primary:  #d4af37;
+      --accent-secondary:#c99e38;
+      --text-primary:    #ffffff;
+      --text-secondary:  #cccccc;
+      --text-tertiary:   #999999;
+      --border-light:    rgba(255, 255, 255, 0.1);
+      --border-medium:   rgba(255, 255, 255, 0.15);
+      --font-display:    'Playfair Display', serif;
+      --font-body:       'Inter', sans-serif;
+      --space-xs:  4px;
+      --space-sm:  8px;
+      --space-md:  16px;
+      --space-lg:  24px;
+      --space-xl:  32px;
+      --space-2xl: 48px;
+      --space-3xl: 64px;
+      --z-base:    1;
+      --z-sticky:  10;
+      --z-drawer:  20;
+      --z-modal:   30;
+      --ease-smooth: cubic-bezier(0.4, 0, 0.2, 1);
+      --dur-fast:   150ms;
+      --dur-mid:    300ms;
+      --dur-slow:   500ms;
+    }
+
+    /* ═══════════════════════════════════════════════
+       RESET & BASE
+       ═══════════════════════════════════════════════ */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    body {
+      font-family: var(--font-body);
+      background: var(--bg-primary);
+      color: var(--text-primary);
+      line-height: 1.6;
+      overflow-x: hidden;
+    }
+
+    h1, h2, h3, h4, h5, h6 {
+      font-family: var(--font-display);
+      font-weight: 700;
+      line-height: 1.2;
+      letter-spacing: -0.02em;
+    }
+
+    img {
+      display: block;
+      max-width: 100%;
+      height: auto;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+      transition: color var(--dur-fast) var(--ease-smooth);
+    }
+
+    button {
+      font-family: var(--font-body);
+      cursor: pointer;
+      border: none;
+      background: none;
+    }
+
+    /* ═══════════════════════════════════════════════
+       HEADER
+       ═══════════════════════════════════════════════ */
+    header {
+      position: sticky;
+      top: 0;
+      z-index: var(--z-sticky);
+      background: rgba(10, 10, 10, 0.95);
+      backdrop-filter: blur(10px);
+      border-bottom: 1px solid var(--border-light);
+      padding: var(--space-lg) 0;
+    }
+
+    .header__container {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      max-width: 1400px;
+      margin: 0 auto;
+      padding: 0 var(--space-xl);
+    }
+
+    .logo {
+      font-size: 1.8rem;
+      font-weight: 900;
+      letter-spacing: -0.03em;
+      font-family: var(--font-display);
+      color: var(--accent-primary);
+    }
+
+    .nav__desktop {
+      display: flex;
+      gap: var(--space-2xl);
+      list-style: none;
+    }
+
+    .nav__desktop a {
+      font-size: 0.9rem;
+      font-weight: 500;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: var(--text-secondary);
+      position: relative;
+    }
+
+    .nav__desktop a::after {
+      content: '';
+      position: absolute;
+      bottom: -4px;
+      left: 0;
+      width: 0;
+      height: 2px;
+      background: var(--accent-primary);
+      transition: width var(--dur-fast) var(--ease-smooth);
+    }
+
+    .nav__desktop a:hover::after {
+      width: 100%;
+    }
+
+    .nav__actions {
+      display: flex;
+      gap: var(--space-lg);
+      align-items: center;
+    }
+
+    .btn-icon {
+      width: 40px;
+      height: 40px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 50%;
+      background: var(--bg-tertiary);
+      color: var(--text-primary);
+      font-size: 1.2rem;
+      transition: all var(--dur-fast) var(--ease-smooth);
+    }
+
+    .btn-icon:hover {
+      background: var(--accent-primary);
+      color: var(--bg-primary);
+    }
+
+    .nav__mobile {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100vh;
+      background: var(--bg-primary);
+      z-index: calc(var(--z-modal) - 1);
+      padding: var(--space-2xl);
+      overflow-y: auto;
+      flex-direction: column;
+    }
+
+    .nav__mobile.open {
+      display: flex;
+    }
+
+    @media (max-width: 768px) {
+      .nav__desktop {
+        display: none;
+      }
+
+      .nav__mobile-toggle {
+        display: block;
+      }
+    }
+
+    /* ═══════════════════════════════════════════════
+       HERO - HEXAGONS
+       ═══════════════════════════════════════════════ */
+    .hero {
+      position: relative;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+      background: linear-gradient(135deg, #0a0a0a 0%, #1a1a1a 100%);
+    }
+
+    .hexagon-bg {
+      position: absolute;
+      inset: 0;
+      z-index: 0;
+      opacity: 0.4;
+    }
+
+    .hexagon {
+      position: absolute;
+      width: 100px;
+      height: 100px;
+      border: 2px solid rgba(212, 175, 55, 0.3);
+      clip-path: polygon(25% 0%, 75% 0%, 100% 50%, 75% 100%, 25% 100%, 0% 50%);
+      transition: opacity 0.8s ease;
+    }
+
+    .hexagon:nth-child(1) { top: 10%; left: 5%; width: 120px; height: 120px; opacity: 0.8; }
+    .hexagon:nth-child(2) { top: 20%; right: 10%; width: 80px; height: 80px; opacity: 0.6; }
+    .hexagon:nth-child(3) { top: 50%; left: 15%; width: 100px; height: 100px; opacity: 0.4; }
+    .hexagon:nth-child(4) { bottom: 20%; right: 5%; width: 90px; height: 90px; opacity: 0.5; }
+    .hexagon:nth-child(5) { bottom: 40%; left: 50%; width: 110px; height: 110px; opacity: 0.3; }
+    .hexagon:nth-child(6) { top: 30%; right: 30%; width: 70px; height: 70px; opacity: 0.7; }
+    .hexagon:nth-child(7) { bottom: 10%; left: 30%; width: 95px; height: 95px; opacity: 0.4; }
+    .hexagon:nth-child(8) { top: 60%; right: 20%; width: 85px; height: 85px; opacity: 0.5; }
+
+    .hero__overlay {
+      position: absolute;
+      inset: 0;
+      background: rgba(10, 10, 10, 0.4);
+      z-index: 1;
+    }
+
+    .hero__content {
+      position: relative;
+      z-index: 2;
+      text-align: center;
+      max-width: 800px;
+      animation: fadeInUp 800ms var(--ease-smooth) 200ms backwards;
+    }
+
+    .hero__subtitle {
+      font-size: 0.9rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.15em;
+      color: var(--accent-primary);
+      margin-bottom: var(--space-md);
+    }
+
+    .hero__title {
+      font-size: clamp(3rem, 10vw, 5.5rem);
+      font-weight: 900;
+      margin-bottom: var(--space-lg);
+      text-transform: uppercase;
+      letter-spacing: -0.02em;
+    }
+
+    .hero__desc {
+      font-size: 1.1rem;
+      color: var(--text-secondary);
+      margin-bottom: var(--space-2xl);
+      max-width: 600px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    .hero__cta {
+      display: inline-flex;
+      gap: var(--space-sm);
+      align-items: center;
+      padding: var(--space-md) var(--space-xl);
+      background: var(--accent-primary);
+      color: var(--bg-primary);
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      font-size: 0.9rem;
+      border-radius: 2px;
+      transition: all var(--dur-mid) var(--ease-smooth);
+    }
+
+    .hero__cta:hover {
+      background: var(--accent-secondary);
+      transform: translateY(-2px);
+    }
+
+    @keyframes fadeInUp {
+      from {
+        opacity: 0;
+        transform: translateY(30px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    /* ═══════════════════════════════════════════════
+       SECTIONS GENERAL
+       ═══════════════════════════════════════════════ */
+    .section {
+      padding: var(--space-3xl) var(--space-xl);
+      max-width: 1400px;
+      margin: 0 auto;
+    }
+
+    .section__header {
+      margin-bottom: var(--space-2xl);
+      text-align: center;
+    }
+
+    .section__title {
+      font-size: clamp(2.5rem, 8vw, 3.5rem);
+      margin-bottom: var(--space-md);
+    }
+
+    .section__desc {
+      font-size: 1rem;
+      color: var(--text-secondary);
+      max-width: 600px;
+      margin: 0 auto;
+    }
+
+    /* ═══════════════════════════════════════════════
+       PRODUCTOS - CATEGORÍAS
+       ═══════════════════════════════════════════════ */
+    .categories-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: var(--space-2xl);
+      margin-top: var(--space-2xl);
+    }
+
+    .category-card {
+      display: flex;
+      flex-direction: column;
+      cursor: pointer;
+      transition: all var(--dur-mid) var(--ease-smooth);
+      border-radius: 4px;
+      overflow: hidden;
+      background: var(--bg-surface);
+      border: 1px solid var(--border-light);
+    }
+
+    .category-card:hover {
+      border-color: var(--accent-primary);
+      transform: translateY(-8px);
+      box-shadow: 0 20px 40px rgba(212, 175, 55, 0.1);
+    }
+
+    .category-card__img {
+      width: 100%;
+      aspect-ratio: 3/4;
+      background: linear-gradient(135deg, var(--bg-tertiary) 0%, var(--bg-surface) 100%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--text-tertiary);
+      font-size: 3rem;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .category-card__img img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: transform var(--dur-slow) var(--ease-smooth);
+    }
+
+    .category-card:hover .category-card__img img {
+      transform: scale(1.05);
+    }
+
+    .category-card__content {
+      padding: var(--space-lg);
+    }
+
+    .category-card__name {
+      font-size: 1.2rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: -0.01em;
+      margin-bottom: var(--space-sm);
+    }
+
+    .category-card__info {
+      font-size: 0.85rem;
+      color: var(--text-tertiary);
+    }
+
+    /* ═══════════════════════════════════════════════
+       PRODUCT MODAL PANEL
+       ═══════════════════════════════════════════════ */
+    .modal-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.7);
+      backdrop-filter: blur(4px);
+      z-index: var(--z-modal);
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity var(--dur-mid) var(--ease-smooth);
+    }
+
+    .modal-overlay.open {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    .modal-panel {
+      position: fixed;
+      top: 0;
+      right: -100%;
+      width: min(600px, 90vw);
+      height: 100vh;
+      background: var(--bg-primary);
+      border-left: 1px solid var(--border-light);
+      z-index: calc(var(--z-modal) + 1);
+      transition: right var(--dur-mid) var(--ease-smooth);
+      display: flex;
+      flex-direction: column;
+      overflow-y: auto;
+    }
+
+    .modal-panel.open {
+      right: 0;
+    }
+
+    .modal__header {
+      position: sticky;
+      top: 0;
+      padding: var(--space-lg);
+      border-bottom: 1px solid var(--border-light);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: rgba(10, 10, 10, 0.95);
+      backdrop-filter: blur(10px);
+    }
+
+    .modal__title {
+      font-size: 1.5rem;
+      text-transform: uppercase;
+    }
+
+    .modal__close {
+      width: 40px;
+      height: 40px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: var(--bg-tertiary);
+      border-radius: 50%;
+      font-size: 1.2rem;
+      transition: all var(--dur-fast) var(--ease-smooth);
+    }
+
+    .modal__close:hover {
+      background: var(--accent-primary);
+      color: var(--bg-primary);
+    }
+
+    .modal__content {
+      padding: var(--space-2xl);
+      flex: 1;
+    }
+
+    .modal__products {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+      gap: var(--space-lg);
+    }
+
+    .product-item {
+      display: flex;
+      flex-direction: column;
+      background: var(--bg-surface);
+      border: 1px solid var(--border-light);
+      border-radius: 4px;
+      overflow: hidden;
+      transition: all var(--dur-fast) var(--ease-smooth));
+    }
+
+    .product-item:hover {
+      border-color: var(--accent-primary);
+      box-shadow: 0 10px 30px rgba(212, 175, 55, 0.1);
+    }
+
+    .product-item__img {
+      width: 100%;
+      aspect-ratio: 3/4;
+      background: linear-gradient(135deg, var(--bg-tertiary) 0%, var(--bg-surface) 100%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--text-tertiary);
+      font-size: 2rem;
+    }
+
+    .product-item__img img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .product-item__details {
+      padding: var(--space-md);
+    }
+
+    .product-item__name {
+      font-size: 0.95rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      margin-bottom: var(--space-sm);
+    }
+
+    .product-item__desc {
+      font-size: 0.8rem;
+      color: var(--text-secondary);
+      margin-bottom: var(--space-md);
+      line-height: 1.5;
+    }
+
+    .product-item__price {
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: var(--accent-primary);
+      margin-bottom: var(--space-md);
+    }
+
+    .product-item__actions {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: var(--space-sm);
+    }
+
+    .btn-primary {
+      padding: var(--space-sm) var(--space-md);
+      background: var(--accent-primary);
+      color: var(--bg-primary);
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      font-size: 0.75rem;
+      border-radius: 2px;
+      transition: all var(--dur-fast) var(--ease-smooth);
+      text-align: center;
+    }
+
+    .btn-primary:hover {
+      background: var(--accent-secondary);
+    }
+
+    .btn-secondary {
+      padding: var(--space-sm) var(--space-md);
+      background: transparent;
+      color: var(--accent-primary);
+      border: 1px solid var(--accent-primary);
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      font-size: 0.75rem;
+      border-radius: 2px;
+      transition: all var(--dur-fast) var(--ease-smooth);
+    }
+
+    .btn-secondary:hover {
+      background: var(--accent-primary);
+      color: var(--bg-primary);
+    }
+
+    /* ═══════════════════════════════════════════════
+       SALE - MYSTERY BOXES
+       ═══════════════════════════════════════════════ */
+    .mystery-boxes {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: var(--space-2xl);
+      margin-top: var(--space-2xl);
+    }
+
+    .mystery-box {
+      display: flex;
+      flex-direction: column;
+      background: linear-gradient(135deg, rgba(212, 175, 55, 0.1) 0%, rgba(212, 175, 55, 0.05) 100%);
+      border: 2px solid var(--accent-primary);
+      border-radius: 4px;
+      padding: var(--space-2xl);
+      text-align: center;
+      transition: all var(--dur-mid) var(--ease-smooth));
+      position: relative;
+      overflow: hidden;
+    }
+
+    .mystery-box::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(45deg, transparent 30%, rgba(212, 175, 55, 0.1) 50%, transparent 70%);
+      animation: shimmer 3s infinite;
+      opacity: 0;
+    }
+
+    @keyframes shimmer {
+      0%, 100% { opacity: 0; }
+      50% { opacity: 1; }
+    }
+
+    .mystery-box:hover {
+      transform: translateY(-8px);
+      box-shadow: 0 20px 50px rgba(212, 175, 55, 0.2);
+    }
+
+    .mystery-box__icon {
+      font-size: 3.5rem;
+      margin-bottom: var(--space-lg);
+    }
+
+    .mystery-box__price {
+      font-size: 2.2rem;
+      font-weight: 900;
+      color: var(--accent-primary);
+      margin-bottom: var(--space-md);
+    }
+
+    .mystery-box__desc {
+      font-size: 0.9rem;
+      color: var(--text-secondary);
+      margin-bottom: var(--space-lg);
+    }
+
+    .mystery-box__options {
+      text-align: left;
+      margin-bottom: var(--space-lg);
+      padding: var(--space-lg);
+      background: rgba(0, 0, 0, 0.3);
+      border-radius: 2px;
+    }
+
+    .mystery-box__options label {
+      display: flex;
+      align-items: center;
+      margin-bottom: var(--space-md);
+      font-size: 0.9rem;
+      cursor: pointer;
+    }
+
+    .mystery-box__options input {
+      margin-right: var(--space-md);
+      cursor: pointer;
+      width: 16px;
+      height: 16px;
+    }
+
+    .mystery-box__sizes {
+      margin-bottom: var(--space-lg);
+    }
+
+    .mystery-box__sizes label {
+      display: block;
+      margin-bottom: var(--space-sm);
+      font-size: 0.85rem;
+      color: var(--text-secondary);
+    }
+
+    .size-select {
+      width: 100%;
+      padding: var(--space-md);
+      background: var(--bg-tertiary);
+      border: 1px solid var(--border-light);
+      color: var(--text-primary);
+      border-radius: 2px;
+      font-family: var(--font-body);
+      cursor: pointer;
+    }
+
+    .mystery-box__button {
+      padding: var(--space-md) var(--space-xl);
+      background: var(--accent-primary);
+      color: var(--bg-primary);
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      border-radius: 2px;
+      transition: all var(--dur-fast) var(--ease-smooth));
+      font-size: 0.9rem;
+    }
+
+    .mystery-box__button:hover {
+      background: var(--accent-secondary);
+      transform: scale(1.02);
+    }
+
+    /* ═══════════════════════════════════════════════
+       MARCA KAPITAL
+       ═══════════════════════════════════════════════ */
+    .kapital-collection {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: var(--space-2xl);
+      margin-top: var(--space-2xl);
+    }
+
+    .kapital-item {
+      display: flex;
+      flex-direction: column;
+      background: var(--bg-surface);
+      border: 1px solid var(--border-light);
+      border-radius: 4px;
+      overflow: hidden;
+      transition: all var(--dur-mid) var(--ease-smooth));
+    }
+
+    .kapital-item:hover {
+      border-color: var(--accent-primary);
+      transform: translateY(-8px);
+      box-shadow: 0 20px 40px rgba(212, 175, 55, 0.15);
+    }
+
+    .kapital-item__img {
+      width: 100%;
+      aspect-ratio: 3/4;
+      background: linear-gradient(135deg, var(--bg-tertiary) 0%, var(--bg-surface) 100%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--text-tertiary);
+      font-size: 3rem;
+    }
+
+    .kapital-item__img img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .kapital-item__content {
+      padding: var(--space-lg);
+    }
+
+    .kapital-item__name {
+      font-size: 1.1rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      margin-bottom: var(--space-sm);
+    }
+
+    .kapital-item__desc {
+      font-size: 0.85rem;
+      color: var(--text-secondary);
+      margin-bottom: var(--space-md);
+      line-height: 1.6;
+    }
+
+    .kapital-item__price {
+      font-size: 1.3rem;
+      font-weight: 700;
+      color: var(--accent-primary);
+      margin-bottom: var(--space-lg);
+    }
+
+    .kapital-item__actions {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: var(--space-sm);
+    }
+
+    /* ═══════════════════════════════════════════════
+       SOBRE NOSOTROS
+       ═══════════════════════════════════════════════ */
+    .about__content {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: var(--space-3xl);
+      align-items: center;
+      margin-top: var(--space-2xl);
+    }
+
+    .about__text h3 {
+      font-size: 1.5rem;
+      margin-bottom: var(--space-lg);
+    }
+
+    .about__text p {
+      color: var(--text-secondary);
+      margin-bottom: var(--space-lg);
+      line-height: 1.8;
+    }
+
+    .about__stats {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: var(--space-xl);
+    }
+
+    .stat {
+      padding: var(--space-lg);
+      background: var(--bg-surface);
+      border: 1px solid var(--border-light);
+      border-radius: 4px;
+      text-align: center;
+    }
+
+    .stat__number {
+      font-size: 2rem;
+      font-weight: 900;
+      color: var(--accent-primary);
+      margin-bottom: var(--space-sm);
+    }
+
+    .stat__label {
+      font-size: 0.9rem;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: var(--text-secondary);
+    }
+
+    .about__image {
+      width: 100%;
+      aspect-ratio: 1;
+      background: linear-gradient(135deg, var(--bg-tertiary) 0%, var(--bg-surface) 100%);
+      border-radius: 4px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--text-tertiary);
+      font-size: 5rem;
+      overflow: hidden;
+    }
+
+    .about__image img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    @media (max-width: 768px) {
+      .about__content {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    /* ═══════════════════════════════════════════════
+       COMENTARIOS
+       ═══════════════════════════════════════════════ */
+    .comments-section {
+      margin-top: var(--space-2xl);
+    }
+
+    .comments-container {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+      gap: var(--space-2xl);
+      margin-bottom: var(--space-2xl);
+    }
+
+    .comment-card {
+      background: var(--bg-surface);
+      border: 1px solid var(--border-light);
+      padding: var(--space-lg);
+      border-radius: 4px;
+      transition: all var(--dur-mid) var(--ease-smooth));
+    }
+
+    .comment-card:hover {
+      border-color: var(--accent-primary);
+      box-shadow: 0 10px 30px rgba(212, 175, 55, 0.1);
+    }
+
+    .comment__header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: var(--space-md);
+    }
+
+    .comment__name {
+      font-weight: 700;
+      font-size: 0.95rem;
+    }
+
+    .comment__date {
+      font-size: 0.75rem;
+      color: var(--text-tertiary);
+    }
+
+    .comment__rating {
+      font-size: 0.9rem;
+      color: var(--accent-primary);
+      letter-spacing: 0.05em;
+    }
+
+    .comment__text {
+      color: var(--text-secondary);
+      line-height: 1.7;
+      font-size: 0.9rem;
+    }
+
+    .comment-form {
+      background: var(--bg-surface);
+      border: 1px solid var(--border-light);
+      padding: var(--space-lg);
+      border-radius: 4px;
+    }
+
+    .form-group {
+      margin-bottom: var(--space-lg);
+    }
+
+    .form-group label {
+      display: block;
+      font-size: 0.85rem;
+      font-weight: 600;
+      margin-bottom: var(--space-sm);
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+    }
+
+    .form-group input,
+    .form-group textarea {
+      width: 100%;
+      padding: var(--space-md);
+      background: var(--bg-tertiary);
+      border: 1px solid var(--border-light);
+      color: var(--text-primary);
+      font-family: var(--font-body);
+      border-radius: 2px;
+      font-size: 0.9rem;
+    }
+
+    .form-group textarea {
+      min-height: 100px;
+      resize: vertical;
+    }
+
+    .rating-input {
+      display: flex;
+      gap: var(--space-md);
+      font-size: 1.5rem;
+    }
+
+    .rating-input span {
+      cursor: pointer;
+      transition: color var(--dur-fast) var(--ease-smooth);
+      color: var(--text-tertiary);
+    }
+
+    .rating-input span:hover,
+    .rating-input span.active {
+      color: var(--accent-primary);
+    }
+
+    .form-submit {
+      padding: var(--space-md) var(--space-xl);
+      background: var(--accent-primary);
+      color: var(--bg-primary);
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      border-radius: 2px;
+      width: 100%;
+      transition: all var(--dur-fast) var(--ease-smooth));
+    }
+
+    .form-submit:hover {
+      background: var(--accent-secondary);
+    }
+
+    /* ═══════════════════════════════════════════════
+       UBICACIÓN
+       ═══════════════════════════════════════════════ */
+    .location-content {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: var(--space-3xl);
+      margin-top: var(--space-2xl);
+      align-items: center;
+    }
+
+    .location__info {
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-lg);
+    }
+
+    .location__item {
+      display: flex;
+      gap: var(--space-lg);
+      padding: var(--space-lg);
+      background: var(--bg-surface);
+      border: 1px solid var(--border-light);
+      border-radius: 4px;
+    }
+
+    .location__icon {
+      font-size: 1.5rem;
+      min-width: 30px;
+    }
+
+    .location__text h4 {
+      font-size: 0.95rem;
+      margin-bottom: var(--space-sm);
+      text-transform: uppercase;
+    }
+
+    .location__text p {
+      font-size: 0.9rem;
+      color: var(--text-secondary);
+    }
+
+    .location__map {
+      width: 100%;
+      aspect-ratio: 1;
+      background: linear-gradient(135deg, var(--bg-tertiary) 0%, var(--bg-surface) 100%);
+      border-radius: 4px;
+      border: 1px solid var(--border-light);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--text-tertiary);
+      font-size: 3rem;
+    }
+
+    .location__map iframe {
+      width: 100%;
+      height: 100%;
+      border-radius: 4px;
+    }
+
+    @media (max-width: 768px) {
+      .location-content {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    /* ═══════════════════════════════════════════════
+       FOOTER
+       ═══════════════════════════════════════════════ */
+    footer {
+      background: var(--bg-secondary);
+      border-top: 1px solid var(--border-light);
+      padding: var(--space-3xl) var(--space-xl);
+      margin-top: var(--space-3xl);
+    }
+
+    .footer__content {
+      max-width: 1400px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: var(--space-2xl);
+      margin-bottom: var(--space-2xl);
+    }
+
+    .footer__col h3 {
+      font-size: 0.9rem;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      margin-bottom: var(--space-lg);
+    }
+
+    .footer__links {
+      list-style: none;
+    }
+
+    .footer__links li {
+      margin-bottom: var(--space-md);
+    }
+
+    .footer__links a {
+      color: var(--text-secondary);
+      font-size: 0.9rem;
+    }
+
+    .footer__links a:hover {
+      color: var(--accent-primary);
+    }
+
+    .footer__bottom {
+      max-width: 1400px;
+      margin: 0 auto;
+      border-top: 1px solid var(--border-light);
+      padding-top: var(--space-2xl);
+      text-align: center;
+      font-size: 0.85rem;
+      color: var(--text-tertiary);
+    }
+
+    /* ═══════════════════════════════════════════════
+       UTILITIES
+       ═══════════════════════════════════════════════ */
+    .hidden { display: none; }
+    .mt-lg { margin-top: var(--space-lg); }
+    .mb-lg { margin-bottom: var(--space-lg); }
+
+    .toast {
+      position: fixed;
+      bottom: var(--space-2xl);
+      left: 50%;
+      transform: translateX(-50%) translateY(120px);
+      background: var(--accent-primary);
+      color: var(--bg-primary);
+      padding: var(--space-md) var(--space-xl);
+      border-radius: 2px;
+      font-weight: 600;
+      z-index: 50;
+      transition: transform var(--dur-mid) var(--ease-smooth));
+      pointer-events: none;
+    }
+
+    .toast.show {
+      transform: translateX(-50%) translateY(0);
+    }
+  </style>
+</head>
+
+<body>
+  <!-- HEADER -->
+  <header>
+    <div class="header__container">
+      <div class="logo">KAPITAL</div>
+
+      <nav class="nav__desktop">
+        <ul class="nav__desktop">
+          <li><a href="#productos">Productos</a></li>
+          <li><a href="#sale">Sale</a></li>
+          <li><a href="#kapital">Marca</a></li>
+          <li><a href="#comentarios">Reseñas</a></li>
+          <li><a href="#ubicacion">Ubicación</a></li>
+        </ul>
+      </nav>
+
+      <div class="nav__actions">
+        <button class="btn-icon nav__mobile-toggle" id="menuBtn" title="Menú">☰</button>
+      </div>
+    </div>
+  </header>
+
+  <nav class="nav__mobile" id="mobileNav">
+    <button class="btn-icon" id="mobileClose" style="margin-bottom: var(--space-2xl);">✕</button>
+    <a href="#productos" style="padding: var(--space-md) 0; border-bottom: 1px solid var(--border-light);">Productos</a>
+    <a href="#sale" style="padding: var(--space-md) 0; border-bottom: 1px solid var(--border-light);">Sale</a>
+    <a href="#kapital" style="padding: var(--space-md) 0; border-bottom: 1px solid var(--border-light);">Marca</a>
+    <a href="#comentarios" style="padding: var(--space-md) 0; border-bottom: 1px solid var(--border-light);">Reseñas</a>
+    <a href="#ubicacion" style="padding: var(--space-md) 0;">Ubicación</a>
+  </nav>
+
+  <!-- HERO -->
+  <section class="hero">
+    <div class="hexagon-bg" id="hexagonBg">
+      <div class="hexagon"></div>
+      <div class="hexagon"></div>
+      <div class="hexagon"></div>
+      <div class="hexagon"></div>
+      <div class="hexagon"></div>
+      <div class="hexagon"></div>
+      <div class="hexagon"></div>
+      <div class="hexagon"></div>
+    </div>
+    <div class="hero__overlay"></div>
+    <div class="hero__content">
+      <div class="hero__subtitle">Moda urbana colombiana</div>
+      <h1 class="hero__title">Kapital</h1>
+      <p class="hero__desc">Colecciones de alto impacto diseñadas desde Santa Rosa de Cabal. Movimiento, estilo y autenticidad en cada prenda.</p>
+      <button class="hero__cta" onclick="document.getElementById('productos').scrollIntoView({behavior: 'smooth'})">
+        Explorar Colecciones ↓
+      </button>
+    </div>
+  </section>
+
+  <!-- PRODUCTOS -->
+  <section class="section" id="productos">
+    <div class="section__header">
+      <h2 class="section__title">Nuestras Colecciones</h2>
+      <p class="section__desc">Descubre nuestras categorías de ropa con rotación constante. Cada semana nuevos diseños.</p>
+    </div>
+    <div class="categories-grid" id="categoriesGrid"></div>
+  </section>
+
+  <!-- MODAL PRODUCTOS -->
+  <div class="modal-overlay" id="modalOverlay"></div>
+  <div class="modal-panel" id="modalPanel">
+    <div class="modal__header">
+      <h3 class="modal__title" id="modalTitle">Categoría</h3>
+      <button class="modal__close" id="modalClose">✕</button>
+    </div>
+    <div class="modal__content">
+      <div class="modal__products" id="modalProducts"></div>
+    </div>
+  </div>
+
+  <!-- SALE -->
+  <section class="section" id="sale">
+    <div class="section__header">
+      <h2 class="section__title">Cajas Misteriosas</h2>
+      <p class="section__desc">Sorpréndate con nuestras cajas de descuento. Elige tu presupuesto y déjate llevar por la magia.</p>
+    </div>
+    <div class="mystery-boxes" id="mysteryBoxes"></div>
+  </section>
+
+  <!-- MARCA KAPITAL -->
+  <section class="section" id="kapital">
+    <div class="section__header">
+      <h2 class="section__title">Marca Kapital</h2>
+      <p class="section__desc">Nuestras prendas icónicas, diseñadas con precisión y exclusividad.</p>
+    </div>
+    <div class="kapital-collection" id="kapitalCollection"></div>
+  </section>
+
+  <!-- SOBRE NOSOTROS -->
+  <section class="section" id="sobre-nosotros">
+    <div class="section__header">
+      <h2 class="section__title">Sobre Kapital</h2>
+    </div>
+    <div class="about__content">
+      <div class="about__text">
+        <h3>Nuestra Historia</h3>
+        <p>Kapital nace en Santa Rosa de Cabal como un proyecto de moda urbana con visión local pero alcance global. Cada prenda es pensada para la generación que no solo viste, sino que expresa.</p>
+        <p>Nos especializamos en prendas de rotación constante, cajas misteriosas y colecciones exclusivas que capturan la esencia del movimiento urbano colombiano.</p>
+        <div class="about__stats">
+          <div class="stat">
+            <div class="stat__number">+5k</div>
+            <div class="stat__label">Clientes Felices</div>
+          </div>
+          <div class="stat">
+            <div class="stat__number">2024</div>
+            <div class="stat__label">Año de Inicio</div>
+          </div>
+        </div>
+      </div>
+      <div class="about__image">📸</div>
+    </div>
+  </section>
+
+  <!-- COMENTARIOS -->
+  <section class="section" id="comentarios">
+    <div class="section__header">
+      <h2 class="section__title">Lo Que Dicen Nuestros Clientes</h2>
+      <p class="section__desc">Reseñas reales de personas que confían en Kapital.</p>
+    </div>
+    <div class="comments-section">
+      <div class="comments-container" id="commentsContainer"></div>
+
+      <div class="comment-form">
+        <h3 style="margin-bottom: var(--space-lg); text-transform: uppercase;">Deja Tu Reseña</h3>
+        <form id="commentForm">
+          <div class="form-group">
+            <label>Nombre</label>
+            <input type="text" id="commentName" required placeholder="Tu nombre">
+          </div>
+          <div class="form-group">
+            <label>Puntuación</label>
+            <div class="rating-input" id="ratingInput">
+              <span data-rating="1">★</span>
+              <span data-rating="2">★</span>
+              <span data-rating="3">★</span>
+              <span data-rating="4">★</span>
+              <span data-rating="5">★</span>
+            </div>
+            <input type="hidden" id="commentRating" value="5">
+          </div>
+          <div class="form-group">
+            <label>Tu Comentario</label>
+            <textarea id="commentText" required placeholder="Cuéntanos tu experiencia..."></textarea>
+          </div>
+          <button type="submit" class="form-submit">Enviar Reseña</button>
+        </form>
+      </div>
+    </div>
+  </section>
+
+  <!-- UBICACIÓN -->
+  <section class="section" id="ubicacion">
+    <div class="section__header">
+      <h2 class="section__title">Nuestra Ubicación</h2>
+      <p class="section__desc">Visítanos en Santa Rosa de Cabal o contáctanos por WhatsApp.</p>
+    </div>
+    <div class="location-content">
+      <div class="location__info">
+        <div class="location__item">
+          <div class="location__icon">📍</div>
+          <div class="location__text">
+            <h4>Dirección</h4>
+            <p id="locationAddress">Cargando información...</p>
+          </div>
+        </div>
+        <div class="location__item">
+          <div class="location__icon">⏰</div>
+          <div class="location__text">
+            <h4>Horario</h4>
+            <p id="locationHours">Cargando información...</p>
+          </div>
+        </div>
+        <div class="location__item">
+          <div class="location__icon">📱</div>
+          <div class="location__text">
+            <h4>WhatsApp</h4>
+            <p><a href="https://wa.me/573219302571" target="_blank" style="color: var(--accent-primary);">+57 321 9302571</a></p>
+          </div>
+        </div>
+      </div>
+      <div class="location__map" id="locationMap">🗺️</div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer>
+    <div class="footer__content">
+      <div class="footer__col">
+        <h3>Kapital</h3>
+        <ul class="footer__links">
+          <li><a href="#productos">Productos</a></li>
+          <li><a href="#sale">Sale</a></li>
+          <li><a href="#kapital">Marca</a></li>
+        </ul>
+      </div>
+      <div class="footer__col">
+        <h3>Comunidad</h3>
+        <ul class="footer__links">
+          <li><a href="#comentarios">Reseñas</a></li>
+          <li><a href="#sobre-nosotros">Sobre Nosotros</a></li>
+          <li><a href="#ubicacion">Ubicación</a></li>
+        </ul>
+      </div>
+      <div class="footer__col">
+        <h3>Contacto</h3>
+        <ul class="footer__links">
+          <li><a href="https://wa.me/573219302571" target="_blank">WhatsApp</a></li>
+          <li><a href="mailto:info@kapital.co">Email</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer__bottom">
+      <p>&copy; 2024 Kapital. Moda Urbana Colombiana. Todos los derechos reservados.</p>
+    </div>
+  </footer>
+
+  <!-- TOAST -->
+  <div class="toast" id="toast"></div>
+
+  <!-- SCRIPTS -->
+  <script>
+    // ═══════════════════════════════════════════════
+    // DATA
+    // ═══════════════════════════════════════════════
+    const CATEGORIES = [
+      { id: 'oversize', name: 'Oversize', icon: '👕' },
+      { id: 'crop-top', name: 'Crop Top Mujer', icon: '👚' },
+      { id: 'manga-siza-hombre', name: 'Manga Siza Hombre', icon: '👔' },
+      { id: 'sudadera', name: 'Sudadera Hombre y Mujer', icon: '🎽' },
+      { id: 'buso-capota', name: 'Buso Capota Hombre y Mujer', icon: '🧥' },
+      { id: 'conjunto', name: 'Conjunto Hombre y Mujer', icon: '👗' },
+      { id: 'manga-siza-otro', name: 'Manga Siza', icon: '👕' }
+    ];
+
+    const PRODUCTS_BY_CATEGORY = {
+      'oversize': [
+        { id: 1, name: 'Oversize Classic', description: 'Corte oversized clásico', price: null },
+        { id: 2, name: 'Oversize Street', description: 'Diseño urbano street style', price: null },
+        { id: 3, name: 'Oversize Premium', description: 'Tela premium calidad', price: null },
+      ],
+      'crop-top': [
+        { id: 1, name: 'Crop Top Básico', description: 'Diseño simple y versátil', price: null },
+        { id: 2, name: 'Crop Top Gráfico', description: 'Con estampado frontal', price: null },
+        { id: 3, name: 'Crop Top Fitted', description: 'Ajuste perfecto', price: null },
+      ],
+      'manga-siza-hombre': [
+        { id: 1, name: 'Manga Siza Negro', description: 'Clásico negro', price: null },
+        { id: 2, name: 'Manga Siza Blanco', description: 'Blanco puro', price: null },
+        { id: 3, name: 'Manga Siza Gráfico', description: 'Con diseño especial', price: null },
+      ],
+      'sudadera': [
+        { id: 1, name: 'Sudadera Básica', description: 'Comodidad máxima', price: null },
+        { id: 2, name: 'Sudadera Premium', description: 'Tela de calidad', price: null },
+        { id: 3, name: 'Sudadera Oversized', description: 'Corte holgado', price: null },
+      ],
+      'buso-capota': [
+        { id: 1, name: 'Buso Capota Negro', description: 'Básico y versátil', price: null },
+        { id: 2, name: 'Buso Capota Gris', description: 'Tono neutral', price: null },
+        { id: 3, name: 'Buso Capota Gráfico', description: 'Con estampado', price: null },
+      ],
+      'conjunto': [
+        { id: 1, name: 'Conjunto Street', description: 'Set completo urbano', price: null },
+        { id: 2, name: 'Conjunto Casual', description: 'Para uso diario', price: null },
+        { id: 3, name: 'Conjunto Premium', description: 'Calidad superior', price: null },
+      ],
+      'manga-siza-otro': [
+        { id: 1, name: 'Manga Siza Classic', description: 'Diseño clásico', price: null },
+        { id: 2, name: 'Manga Siza Sport', description: 'Para actividades', price: null },
+        { id: 3, name: 'Manga Siza Fashion', description: 'Moda actual', price: null },
+      ]
+    };
+
+    const MYSTERY_BOXES = [
+      { id: 1, price: 150000, description: 'Caja Básica - 1 prenda', options: ['XS', 'S', 'M', 'L', 'XL', 'XXL'] },
+      { id: 2, price: 250000, description: 'Caja Premium - 2 prendas', options: ['XS', 'S', 'M', 'L', 'XL', 'XXL'] },
+      { id: 3, price: 350000, description: 'Caja Deluxe - 3 prendas', options: ['XS', 'S', 'M', 'L', 'XL', 'XXL'] }
+    ];
+
+    const KAPITAL_ITEMS = [
+      { id: 1, name: 'Kapital T-Shirt Classic', description: 'Prenda icónica de Kapital', price: 85000 },
+      { id: 2, name: 'Kapital Hoodie Logo', description: 'Hoodie con logo bordado', price: 180000 },
+      { id: 3, name: 'Kapital Cap', description: 'Gorra oficial de la marca', price: 65000 },
+      { id: 4, name: 'Kapital Pants', description: 'Pantalón oficial', price: 150000 },
+    ];
+
+    const COMMENTS = [
+      { id: 1, name: 'Juan Pérez', date: '2024-08-02', rating: '★★★★★', text: 'Excelente calidad y servicio. Las prendas llegaron rápido y en perfecto estado. ¡Muy recomendado!' },
+      { id: 2, name: 'María López', date: '2024-07-28', rating: '★★★★★', text: 'Me encantó la caja misteriosa. Sorpresa agradable con prendas de muy buena calidad.' },
+      { id: 3, name: 'Carlos Rodríguez', date: '2024-07-20', rating: '★★★★☆', text: 'Buen servicio, los productos son de calidad. La atención por WhatsApp fue rápida y amable.' }
+    ];
+
+    // ═══════════════════════════════════════════════
+    // UTILITIES
+    // ═══════════════════════════════════════════════
+    function showToast(message) {
+      const toast = document.getElementById('toast');
+      toast.textContent = message;
+      toast.classList.add('show');
+      setTimeout(() => toast.classList.remove('show'), 3000);
+    }
+
+    function formatPrice(price) {
+      return new Intl.NumberFormat('es-CO', {
+        style: 'currency',
+        currency: 'COP',
+        minimumFractionDigits: 0
+      }).format(price);
+    }
+
+    // ═══════════════════════════════════════════════
+    // NAVIGATION
+    // ═══════════════════════════════════════════════
+    document.getElementById('menuBtn').addEventListener('click', () => {
+      document.getElementById('mobileNav').classList.add('open');
+    });
+
+    document.getElementById('mobileClose').addEventListener('click', () => {
+      document.getElementById('mobileNav').classList.remove('open');
+    });
+
+    document.querySelectorAll('.nav__mobile a').forEach(link => {
+      link.addEventListener('click', () => {
+        document.getElementById('mobileNav').classList.remove('open');
+      });
+    });
+
+    // ═══════════════════════════════════════════════
+    // HERO - HEXAGONS SCROLL
+    // ═══════════════════════════════════════════════
+    window.addEventListener('scroll', () => {
+      const hexBg = document.getElementById('hexagonBg');
+      if (hexBg) {
+        const scrollPos = window.scrollY;
+        const maxScroll = window.innerHeight;
+        const opacity = Math.max(0.4 - (scrollPos / maxScroll) * 0.4, 0);
+        hexBg.style.opacity = opacity;
+      }
+    });
+
+    // ═══════════════════════════════════════════════
+    // RENDER CATEGORIES
+    // ═══════════════════════════════════════════════
+    function renderCategories() {
+      const grid = document.getElementById('categoriesGrid');
+      grid.innerHTML = CATEGORIES.map(cat => `
+        <div class="category-card" onclick="openCategoryModal('${cat.id}', '${cat.name}')">
+          <div class="category-card__img">${cat.icon}</div>
+          <div class="category-card__content">
+            <h3 class="category-card__name">${cat.name}</h3>
+            <p class="category-card__info">Prendas de rotación constante</p>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    // ═══════════════════════════════════════════════
+    // CATEGORY MODAL
+    // ═══════════════════════════════════════════════
+    function openCategoryModal(categoryId, categoryName) {
+      document.getElementById('modalTitle').textContent = categoryName;
+      const products = PRODUCTS_BY_CATEGORY[categoryId] || [];
+
+      const productsHTML = products.map(product => `
+        <div class="product-item">
+          <div class="product-item__img">👕</div>
+          <div class="product-item__details">
+            <h4 class="product-item__name">${product.name}</h4>
+            <p class="product-item__desc">${product.description}</p>
+            ${product.price ? `<div class="product-item__price">${formatPrice(product.price)}</div>` : ''}
+            <div class="product-item__actions">
+              <button class="btn-primary" onclick="contactWhatsApp('${categoryName} - ${product.name}')">Pedir</button>
+              <button class="btn-secondary" onclick="contactWhatsApp('Info: ${categoryName} - ${product.name}')">Info</button>
+            </div>
+          </div>
+        </div>
+      `).join('');
+
+      document.getElementById('modalProducts').innerHTML = productsHTML;
+      document.getElementById('modalOverlay').classList.add('open');
+      document.getElementById('modalPanel').classList.add('open');
+    }
+
+    document.getElementById('modalClose').addEventListener('click', () => {
+      document.getElementById('modalOverlay').classList.remove('open');
+      document.getElementById('modalPanel').classList.remove('open');
+    });
+
+    document.getElementById('modalOverlay').addEventListener('click', () => {
+      document.getElementById('modalOverlay').classList.remove('open');
+      document.getElementById('modalPanel').classList.remove('open');
+    });
+
+    // ═══════════════════════════════════════════════
+    // MYSTERY BOXES
+    // ═══════════════════════════════════════════════
+    function renderMysteryBoxes() {
+      const container = document.getElementById('mysteryBoxes');
+      container.innerHTML = MYSTERY_BOXES.map((box, idx) => `
+        <div class="mystery-box">
+          <div class="mystery-box__icon">🎁</div>
+          <div class="mystery-box__price">${formatPrice(box.price)}</div>
+          <div class="mystery-box__desc">${box.description}</div>
+
+          <div class="mystery-box__options">
+            <label>
+              <input type="radio" name="preference" value="random" checked> Sorpresa total
+            </label>
+            <label>
+              <input type="radio" name="preference" value="guide"> Mostrar tipos de prendas
+            </label>
+          </div>
+
+          <div class="mystery-box__sizes">
+            <label>Selecciona tu talla:</label>
+            <select class="size-select" id="size-${idx}">
+              ${box.options.map(size => `<option value="${size}">${size}</option>`).join('')}
+            </select>
+          </div>
+
+          <button class="mystery-box__button" onclick="selectMysteryBox(${box.price}, 'size-${idx}')">
+            Seleccionar Caja
+          </button>
+        </div>
+      `).join('');
+    }
+
+    function selectMysteryBox(price, sizeId) {
+      const size = document.getElementById(sizeId).value;
+      const message = `Hola, quiero comprar una caja misteriosa de $${price.toLocaleString('es-CO')} con talla ${size}`;
+      window.open(`https://wa.me/573219302571?text=${encodeURIComponent(message)}`, '_blank');
+    }
+
+    // ═══════════════════════════════════════════════
+    // KAPITAL COLLECTION
+    // ═══════════════════════════════════════════════
+    function renderKapitalItems() {
+      const container = document.getElementById('kapitalCollection');
+      container.innerHTML = KAPITAL_ITEMS.map(item => `
+        <div class="kapital-item">
+          <div class="kapital-item__img">👕</div>
+          <div class="kapital-item__content">
+            <h3 class="kapital-item__name">${item.name}</h3>
+            <p class="kapital-item__desc">${item.description}</p>
+            <div class="kapital-item__price">${formatPrice(item.price)}</div>
+            <div class="kapital-item__actions">
+              <button class="btn-primary" onclick="contactWhatsApp('${item.name}')">Comprar Ahora</button>
+              <button class="btn-secondary" onclick="contactWhatsApp('Info: ${item.name}')">Más Info</button>
+            </div>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    // ═══════════════════════════════════════════════
+    // COMMENTS
+    // ═══════════════════════════════════════════════
+    function renderComments() {
+      const container = document.getElementById('commentsContainer');
+      container.innerHTML = COMMENTS.map(comment => `
+        <div class="comment-card">
+          <div class="comment__header">
+            <div>
+              <div class="comment__name">${comment.name}</div>
+              <div class="comment__date">${comment.date}</div>
+            </div>
+            <div class="comment__rating">${comment.rating}</div>
+          </div>
+          <div class="comment__text">${comment.text}</div>
+        </div>
+      `).join('');
+    }
+
+    document.getElementById('commentForm').addEventListener('submit', (e) => {
+      e.preventDefault();
+      const name = document.getElementById('commentName').value;
+      const rating = document.getElementById('commentRating').value;
+      const text = document.getElementById('commentText').value;
+
+      const newComment = {
+        id: COMMENTS.length + 1,
+        name: name,
+        date: new Date().toISOString().split('T')[0],
+        rating: '★'.repeat(rating),
+        text: text
+      };
+
+      COMMENTS.unshift(newComment);
+      renderComments();
+      document.getElementById('commentForm').reset();
+      document.querySelectorAll('.rating-input span').forEach(s => s.classList.remove('active'));
+      document.querySelectorAll('.rating-input span')[4].classList.add('active');
+      showToast('¡Gracias por tu reseña!');
+    });
+
+    document.querySelectorAll('.rating-input span').forEach(span => {
+      span.addEventListener('click', () => {
+        const rating = span.dataset.rating;
+        document.getElementById('commentRating').value = rating;
+        document.querySelectorAll('.rating-input span').forEach((s, idx) => {
+          s.classList.toggle('active', idx < rating);
+        });
+      });
+    });
+
+    // ═══════════════════════════════════════════════
+    // LOCATION
+    // ═══════════════════════════════════════════════
+    function setupLocation() {
+      // Placeholder - user will add details
+      document.getElementById('locationAddress').textContent = 'Santa Rosa de Cabal, Risaralda, Colombia';
+      document.getElementById('locationHours').textContent = 'Lunes a Domingo: 9:00 AM - 8:00 PM';
+    }
+
+    // ═══════════════════════════════════════════════
+    // WHATSAPP INTEGRATION
+    // ═══════════════════════════════════════════════
+    function contactWhatsApp(product) {
+      const message = `Hola Kapital, me interesa: ${product}`;
+      window.open(`https://wa.me/573219302571?text=${encodeURIComponent(message)}`, '_blank');
+    }
+
+    // ═══════════════════════════════════════════════
+    // INIT
+    // ═══════════════════════════════════════════════
+    document.addEventListener('DOMContentLoaded', () => {
+      renderCategories();
+      renderMysteryBoxes();
+      renderKapitalItems();
+      renderComments();
+      setupLocation();
+
+      // Set initial rating
+      document.querySelectorAll('.rating-input span')[4].classList.add('active');
+    });
+  </script>
+</body>
+</html>
