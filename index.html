@@ -1,1 +1,1033 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="Kapital — Moda urbana colombiana. Gorras, camisetas, hoodies, denim y accesorios desde Santa Rosa de Cabal.">
+<title>Kapital — Moda Urbana</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,300;9..144,400;9..144,500;9..144,600&family=Sora:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 
+<style>
+/* ═══════════════════════════════════════════════
+   TOKENS — negro grafito + ámbar-champán
+   ═══════════════════════════════════════════════ */
+:root {
+  --bg:          oklch(0.055 0.010 75);
+  --surface:     oklch(0.090 0.012 75);
+  --surface-2:   oklch(0.120 0.014 75);
+  --surface-3:   oklch(0.160 0.016 75);
+  --neon:        oklch(0.78 0.135 78);
+  --neon-mid:    oklch(0.78 0.135 78 / .50);
+  --neon-dim:    oklch(0.78 0.135 78 / .16);
+  --neon-subtle: oklch(0.78 0.135 78 / .06);
+  --neon-b:      oklch(0.62 0.085 40);
+  --neon-b-dim:  oklch(0.62 0.085 40 / .16);
+  --ink:         oklch(0.95 0.010 80);
+  --ink-2:       oklch(0.72 0.014 78);
+  --ink-3:       oklch(0.50 0.012 76);
+  --rule:        oklch(0.95 0.010 80 / .08);
+  --rule-accent: oklch(0.78 0.135 78 / .20);
+  --font-display: 'Fraunces', serif;
+  --font-body:    'Sora', sans-serif;
+  --z-base:    1;
+  --z-sticky:  10;
+  --z-drawer:  20;
+  --z-modal:   30;
+  --z-admin:   40;
+  --z-toast:   50;
+  --ease-out-quart: cubic-bezier(0.25, 1, 0.5, 1);
+  --dur-fast: 180ms;
+  --dur-mid:  320ms;
+  --dur-slow: 540ms;
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; -webkit-text-size-adjust: 100%; }
+
+body {
+  font-family: var(--font-body);
+  font-size: 1rem;
+  line-height: 1.6;
+  color: var(--ink);
+  background: var(--bg);
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+}
+
+h1, h2, h3, h4 {
+  font-optical-sizing: auto;
+  font-feature-settings: 'ss01' 1;
+  letter-spacing: -0.01em;
+}
+
+img { display: block; max-width: 100%; }
+a { color: inherit; text-decoration: none; }
+button { cursor: pointer; font-family: inherit; }
+
+:focus-visible {
+  outline: 2px solid var(--neon);
+  outline-offset: 3px;
+}
+
+/* ═══════════════════════════════════════════════
+   RETÍCULA HEXAGONAL SIMÉTRICA
+   ═══════════════════════════════════════════════ */
+.neon-canvas {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  overflow: hidden;
+  background: var(--bg);
+}
+
+.neon-canvas svg {
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  inset: 0;
+  filter: drop-shadow(0 0 3px oklch(0.78 0.135 78 / .35));
+}
+
+.neon-canvas::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(ellipse 90% 70% at 50% 15%, transparent 45%, var(--bg) 100%),
+    linear-gradient(180deg, transparent 0%, transparent 82%, var(--bg) 100%);
+  pointer-events: none;
+}
+
+.hex {
+  fill: none;
+  stroke: var(--neon);
+  stroke-width: 1;
+  vector-effect: non-scaling-stroke;
+  opacity: 0.2;
+}
+
+.hex--a { animation: hex-pulse-a 4s ease-in-out infinite; }
+.hex--b { animation: hex-pulse-b 5.5s ease-in-out infinite 0.3s; }
+.hex--c { animation: hex-pulse-c 6.2s ease-in-out infinite 0.6s; }
+.hex--d { animation: hex-pulse-a 4.8s ease-in-out infinite 0.9s; }
+.hex--e { animation: hex-pulse-b 5.8s ease-in-out infinite 0.2s; }
+.hex--f { animation: hex-pulse-c 6s ease-in-out infinite 0.7s; }
+
+@keyframes hex-pulse-a {
+  0%, 100% { opacity: 0.15; }
+  50%      { opacity: 0.45; }
+}
+
+@keyframes hex-pulse-b {
+  0%, 100% { opacity: 0.18; }
+  50%      { opacity: 0.52; }
+}
+
+@keyframes hex-pulse-c {
+  0%, 100% { opacity: 0.20; }
+  50%      { opacity: 0.58; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hex--a, .hex--b, .hex--c, .hex--d, .hex--e, .hex--f { animation: none; opacity: 0.22; }
+}
+
+/* ═══════════════════════════════════════════════
+   NAV
+   ═══════════════════════════════════════════════ */
+.nav {
+  position: sticky;
+  top: 0;
+  z-index: var(--z-sticky);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 5vw;
+  background: oklch(0.07 0.008 250 / 0.88);
+  backdrop-filter: blur(18px) saturate(150%);
+  border-bottom: 1px solid var(--rule);
+}
+
+.nav__logo {
+  height: 42px;
+  width: auto;
+  filter: drop-shadow(0 0 14px oklch(0.94 0.006 80 / .18));
+}
+
+.nav__center {
+  display: flex;
+  align-items: center;
+  gap: 36px;
+}
+
+.nav__links {
+  display: flex;
+  gap: 36px;
+  list-style: none;
+}
+
+.nav__links a {
+  font-family: var(--font-body);
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--ink-2);
+  transition: color var(--dur-fast) var(--ease-out-quart);
+}
+
+.nav__links a:hover { color: var(--neon); }
+
+.nav__right {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+.lang-selector {
+  display: flex;
+  gap: 6px;
+  background: var(--surface-2);
+  padding: 6px 10px;
+  border-radius: 2px;
+  border: 1px solid var(--rule);
+}
+
+.lang-btn {
+  background: none;
+  border: none;
+  color: var(--ink-2);
+  cursor: pointer;
+  font-size: 0.7rem;
+  font-weight: 700;
+  padding: 4px 8px;
+  transition: color var(--dur-fast);
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+}
+
+.lang-btn.active {
+  color: var(--neon);
+}
+
+.lang-btn:hover {
+  color: var(--neon);
+}
+
+.ig-link {
+  font-size: 0.75rem;
+  color: var(--ink-2);
+  font-weight: 600;
+  transition: color var(--dur-fast);
+}
+
+.ig-link:hover {
+  color: var(--neon);
+}
+
+.bag-trigger {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: none;
+  border: 1px solid var(--rule);
+  border-radius: 999px;
+  padding: 8px 16px 8px 12px;
+  color: var(--ink-2);
+  font-family: var(--font-body);
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  transition: border-color var(--dur-fast), color var(--dur-fast);
+}
+
+.bag-trigger:hover { border-color: var(--neon); color: var(--neon); }
+
+.bag-count {
+  position: absolute;
+  top: -8px;
+  right: -8px;
+  background: var(--neon);
+  color: #000;
+  font-size: 0.55rem;
+  font-weight: 900;
+  min-width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 0 0 2px var(--bg);
+}
+
+.nav__burger {
+  display: none;
+  flex-direction: column;
+  gap: 5px;
+  background: none;
+  border: none;
+  padding: 6px;
+}
+
+.nav__burger span {
+  display: block;
+  width: 22px;
+  height: 1.5px;
+  background: var(--ink);
+  transition: transform var(--dur-mid);
+}
+
+/* ═══════════════════════════════════════════════
+   HERO
+   ═══════════════════════════════════════════════ */
+.hero {
+  position: relative;
+  z-index: var(--z-base);
+  min-height: 100svh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  padding-top: 60px;
+}
+
+.hero__logo-wrap {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 28px;
+}
+
+.hero__logo {
+  width: min(480px, 70vw);
+  animation: hero-breathe 8s ease-in-out infinite alternate;
+}
+
+@keyframes hero-breathe {
+  0%   { filter: drop-shadow(0 0 40px oklch(0.94 0.006 80 / .10)); }
+  100% { filter: drop-shadow(0 0 80px oklch(0.94 0.006 80 / .22)) drop-shadow(0 0 160px oklch(0.78 0.135 78 / .10)); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hero__logo { animation: none; filter: none; }
+}
+
+.hero__tagline {
+  font-family: var(--font-body);
+  font-size: 0.7rem;
+  font-weight: 500;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--neon);
+  opacity: 0.85;
+}
+
+.hero__scroll {
+  position: absolute;
+  bottom: 36px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  font-family: var(--font-body);
+  font-size: 0.65rem;
+  letter-spacing: 0.26em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+  z-index: 2;
+}
+
+.hero__scroll-line {
+  width: 1px;
+  height: 48px;
+  background: linear-gradient(180deg, var(--neon), transparent);
+  animation: scroll-drop 2.2s ease-in-out infinite;
+}
+
+@keyframes scroll-drop {
+  0%, 100% { opacity: 0.3; transform: scaleY(1); transform-origin: top; }
+  50%       { opacity: 1;   transform: scaleY(1); }
+}
+
+/* ═══════════════════════════════════════════════
+   TIENDA
+   ═══════════════════════════════════════════════ */
+.shop {
+  position: relative;
+  z-index: var(--z-base);
+  padding: 88px 5vw 60px;
+  background: oklch(0.08 0.009 250 / 0.72);
+}
+
+.shop__title {
+  font-family: var(--font-display);
+  font-size: clamp(2.2rem, 5vw, 3.8rem);
+  font-weight: 600;
+  line-height: 1.05;
+  text-wrap: balance;
+  color: var(--ink);
+  margin-bottom: 60px;
+}
+
+.category-section {
+  margin-bottom: 72px;
+  scroll-margin-top: 80px;
+}
+
+.category-title {
+  font-family: var(--font-display);
+  font-size: clamp(1.6rem, 3.5vw, 2.2rem);
+  font-weight: 500;
+  margin-bottom: 32px;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--neon);
+  border-bottom: 1px solid var(--rule-accent);
+  padding-bottom: 16px;
+}
+
+.subcategory-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+  gap: 12px;
+  margin-bottom: 16px;
+}
+
+.subcat-card {
+  aspect-ratio: 1;
+  background: linear-gradient(135deg, var(--surface-2) 0%, var(--surface) 100%);
+  border: 1px solid var(--rule);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.85rem;
+  font-weight: 700;
+  text-align: center;
+  padding: 16px;
+  transition: all var(--dur-mid) var(--ease-out-quart);
+  border-radius: 2px;
+  color: var(--ink);
+  line-height: 1.3;
+}
+
+.subcat-card:hover {
+  border-color: var(--neon);
+  background: linear-gradient(135deg, var(--surface-3) 0%, var(--surface-2) 100%);
+  color: var(--neon);
+  transform: translateY(-4px);
+  box-shadow: 0 8px 24px oklch(0.78 0.135 78 / .15);
+}
+
+.subcat-card:focus-visible {
+  outline: 2px solid var(--neon);
+  outline-offset: 2px;
+}
+
+/* ═══════════════════════════════════════════════
+   MODAL PRODUCTO
+   ═══════════════════════════════════════════════ */
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.7);
+  z-index: 200;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  backdrop-filter: blur(4px);
+  animation: modal-fade-in var(--dur-mid) var(--ease-out-quart);
+}
+
+.modal-overlay.open {
+  display: flex;
+}
+
+@keyframes modal-fade-in {
+  from { opacity: 0; backdrop-filter: blur(0); }
+  to { opacity: 1; backdrop-filter: blur(4px); }
+}
+
+.product-drawer {
+  position: relative;
+  background: var(--surface);
+  border: 1px solid var(--rule);
+  border-radius: 4px;
+  padding: 40px;
+  max-width: 600px;
+  width: 90%;
+  max-height: 85vh;
+  overflow-y: auto;
+  animation: drawer-slide var(--dur-slow) var(--ease-out-quart);
+}
+
+@keyframes drawer-slide {
+  from { transform: translateY(60px); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
+}
+
+.drawer__close {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  background: none;
+  border: none;
+  color: var(--ink-2);
+  font-size: 1.6rem;
+  cursor: pointer;
+  transition: color var(--dur-fast);
+  z-index: 10;
+}
+
+.drawer__close:hover {
+  color: var(--neon);
+}
+
+.drawer__cat {
+  font-family: var(--font-body);
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--neon);
+  margin-bottom: 8px;
+  display: block;
+}
+
+.drawer__title {
+  font-family: var(--font-display);
+  font-size: 2rem;
+  font-weight: 600;
+  margin-bottom: 16px;
+  color: var(--ink);
+}
+
+.drawer__desc {
+  font-size: 0.9rem;
+  line-height: 1.65;
+  color: var(--ink-2);
+  margin-bottom: 28px;
+  max-width: 55ch;
+}
+
+.size-section {
+  margin-bottom: 32px;
+}
+
+.size-label {
+  font-family: var(--font-body);
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--neon);
+  margin-bottom: 14px;
+  display: block;
+}
+
+.size-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 10px;
+}
+
+.size-btn {
+  aspect-ratio: 1;
+  background: var(--surface-2);
+  border: 1px solid var(--rule);
+  color: var(--ink);
+  cursor: pointer;
+  transition: all var(--dur-fast);
+  font-weight: 700;
+  border-radius: 2px;
+  font-size: 0.85rem;
+}
+
+.size-btn:hover {
+  border-color: var(--neon);
+  color: var(--neon);
+  background: var(--surface-3);
+}
+
+.size-btn.selected {
+  background: var(--neon);
+  color: #000;
+  border-color: var(--neon);
+}
+
+.drawer__actions {
+  display: flex;
+  gap: 12px;
+}
+
+.btn {
+  flex: 1;
+  padding: 14px 20px;
+  border: 1px solid var(--rule);
+  background: none;
+  color: var(--ink);
+  cursor: pointer;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  font-size: 0.75rem;
+  transition: all var(--dur-fast) var(--ease-out-quart);
+  border-radius: 2px;
+  font-family: var(--font-body);
+}
+
+.btn:hover {
+  border-color: var(--neon-mid);
+}
+
+.btn-primary {
+  background: var(--neon);
+  color: #000;
+  border-color: var(--neon);
+}
+
+.btn-primary:hover {
+  filter: brightness(0.92);
+}
+
+/* ═══════════════════════════════════════════════
+   DESCUENTOS
+   ═══════════════════════════════════════════════ */
+.sale {
+  position: relative;
+  z-index: var(--z-base);
+  padding: 80px 5vw;
+  background: oklch(0.08 0.009 250 / 0.72);
+}
+
+.sale__title {
+  font-family: var(--font-display);
+  font-size: clamp(2.2rem, 5vw, 3.8rem);
+  font-weight: 600;
+  line-height: 1.05;
+  text-wrap: balance;
+  color: var(--ink);
+  margin-bottom: 48px;
+}
+
+.sale-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+  gap: 8px;
+}
+
+.sale-card {
+  position: relative;
+  aspect-ratio: 3 / 4;
+  background: var(--surface);
+  border: 1px solid var(--rule);
+  overflow: hidden;
+  cursor: pointer;
+  transition: all var(--dur-mid) var(--ease-out-quart);
+}
+
+.sale-card:hover {
+  border-color: var(--neon);
+  transform: scale(1.03);
+}
+
+.sale-card__img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform var(--dur-slow) var(--ease-out-quart);
+}
+
+.sale-card:hover .sale-card__img {
+  transform: scale(1.08);
+}
+
+.sale-badge {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  background: #d32f2f;
+  color: white;
+  padding: 6px 10px;
+  font-size: 0.65rem;
+  font-weight: 900;
+  border-radius: 2px;
+  z-index: 5;
+  letter-spacing: 0.08em;
+}
+
+/* ═══════════════════════════════════════════════
+   GOOGLE MAPS
+   ═══════════════════════════════════════════════ */
+.ubicacion {
+  position: relative;
+  z-index: var(--z-base);
+  padding: 80px 5vw;
+  background: oklch(0.08 0.009 250 / 0.72);
+}
+
+.ubicacion__title {
+  font-family: var(--font-display);
+  font-size: clamp(2.2rem, 5vw, 3.8rem);
+  font-weight: 600;
+  line-height: 1.05;
+  text-wrap: balance;
+  color: var(--ink);
+  margin-bottom: 40px;
+}
+
+.maps-container {
+  border: 1px solid var(--rule);
+  border-radius: 4px;
+  overflow: hidden;
+  height: 500px;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+}
+
+.maps-frame {
+  width: 100%;
+  height: 100%;
+  border: none;
+}
+
+/* ═══════════════════════════════════════════════
+   RESPONSIVE
+   ═══════════════════════════════════════════════ */
+@media (max-width: 768px) {
+  .nav__center {
+    display: none;
+  }
+
+  .nav__burger {
+    display: flex;
+  }
+
+  .nav__logo {
+    height: 32px;
+  }
+
+  .product-drawer {
+    padding: 28px;
+  }
+
+  .size-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+
+  .subcategory-grid {
+    grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+  }
+
+  .maps-container {
+    height: 350px;
+  }
+}
+
+@media (max-width: 480px) {
+  .nav {
+    padding: 10px 4vw;
+  }
+
+  .nav__right {
+    gap: 12px;
+  }
+
+  .lang-selector {
+    padding: 4px 6px;
+  }
+
+  .product-drawer {
+    padding: 20px;
+    border-radius: 0;
+  }
+
+  .drawer__title {
+    font-size: 1.4rem;
+  }
+
+  .size-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+
+  .maps-container {
+    height: 280px;
+  }
+}
+</style>
+</head>
+<body>
+
+<!-- FONDO HEXAGONAL SIMÉTRICO -->
+<div class="neon-canvas">
+  <svg viewBox="0 0 1400 1400" preserveAspectRatio="xMidYMid slice" style="opacity: 0.6;">
+    <!-- FILA SUPERIOR CENTRAL -->
+    <path class="hex hex--a" d="M 350 150 L 430 110 L 510 150 L 510 270 L 430 310 L 350 270 Z"/>
+    <path class="hex hex--b" d="M 700 150 L 780 110 L 860 150 L 860 270 L 780 310 L 700 270 Z"/>
+    <path class="hex hex--c" d="M 1050 150 L 1130 110 L 1210 150 L 1210 270 L 1130 310 L 1050 270 Z"/>
+
+    <!-- FILA MEDIA -->
+    <path class="hex hex--d" d="M 175 450 L 255 410 L 335 450 L 335 570 L 255 610 L 175 570 Z"/>
+    <path class="hex hex--e" d="M 525 450 L 605 410 L 685 450 L 685 570 L 605 610 L 525 570 Z"/>
+    <path class="hex hex--f" d="M 875 450 L 955 410 L 1035 450 L 1035 570 L 955 610 L 875 570 Z"/>
+    <path class="hex hex--a" d="M 1225 450 L 1305 410 L 1385 450 L 1385 570 L 1305 610 L 1225 570 Z"/>
+
+    <!-- FILA INFERIOR -->
+    <path class="hex hex--b" d="M 350 750 L 430 710 L 510 750 L 510 870 L 430 910 L 350 870 Z"/>
+    <path class="hex hex--c" d="M 700 750 L 780 710 L 860 750 L 860 870 L 780 910 L 700 870 Z"/>
+    <path class="hex hex--d" d="M 1050 750 L 1130 710 L 1210 750 L 1210 870 L 1130 910 L 1050 870 Z"/>
+  </svg>
+</div>
+
+<!-- NAV -->
+<nav class="nav">
+  <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAABgAAAAQACAYAAAAncZJCAABxZmNhQlgAAHFmanVtYgAAAB5qdW1kYzJwYQARABCAAACqADibcQNjMnBhAAAAcUBqdW1iAAAAR2p1bWRjMm1hABEAEIAAAKoAOJtxA3VybjpjMnBhOjViNzAxYmJkLThiYmMtNDdjMi04MzM5LTE2NjA1MDY0OTg4OjU4MTc0OQAAf2QAAHlkAAAIdAAAX+AAAJJUAA" class="nav__logo" alt="Kapital">
+
+  <div class="nav__center">
+    <ul class="nav__links">
+      <li><a href="#tienda" data-es="Tienda" data-en="Shop">Tienda</a></li>
+      <li><a href="#descuentos" data-es="Descuentos" data-en="Sale">Descuentos</a></li>
+      <li><a href="#ubicacion" data-es="Ubicación" data-en="Location">Ubicación</a></li>
+    </ul>
+  </div>
+
+  <div class="nav__right">
+    <a href="https://instagram.com/kapitalbrands" class="ig-link" target="_blank">@kapitalbrands</a>
+    <div class="lang-selector">
+      <button class="lang-btn active" onclick="setLanguage('es')">ES</button>
+      <button class="lang-btn" onclick="setLanguage('en')">EN</button>
+    </div>
+    <button class="bag-trigger" onclick="openBag()">
+      <span data-es="Bag" data-en="Bag">Bag</span>
+      <span class="bag-count" id="bagCount">0</span>
+    </button>
+  </div>
+
+  <button class="nav__burger" onclick="toggleMenu()">
+    <span></span>
+    <span></span>
+    <span></span>
+  </button>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero__logo-wrap">
+    <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAABgAAAAQACAYAAAAncZJCAABxZmNhQlgAAHFmanVtYgAAAB5qdW1kYzJwYQARABCAAACqADibcQNjMnBhAAAAcUBqdW1iAAAAR2p1bWRjMm1hABEAEIAAAKoAOJtxA3VybjpjMnBhOjViNzAxYmJkLThiYmMtNDdjMi04MzM5LTE2NjA1MDY0OTg4OjU4MTc0OQAAf2QAAHlkAAAIdAAAX+AAAJJUAA" class="hero__logo" alt="Kapital Logo">
+    <p class="hero__tagline" data-es="Moda Urbana Colombiana" data-en="Colombian Urban Fashion">Moda Urbana Colombiana</p>
+  </div>
+  <div class="hero__scroll">
+    <span data-es="Desplázate" data-en="Scroll">Desplázate</span>
+    <div class="hero__scroll-line"></div>
+  </div>
+</section>
+
+<!-- TIENDA -->
+<section class="shop" id="tienda">
+  <h2 class="shop__title" data-es="TIENDA" data-en="SHOP">TIENDA</h2>
+
+  <!-- CAMISAS -->
+  <div class="category-section">
+    <h3 class="category-title" data-es="Camisas" data-en="Shirts">Camisas</h3>
+    <div class="subcategory-grid">
+      <button class="subcat-card" onclick="openProductGallery('camisas', 'oversize')"><span data-es="Oversize" data-en="Oversize">Oversize</span></button>
+      <button class="subcat-card" onclick="openProductGallery('camisas', 'basicas')"><span data-es="Básicas" data-en="Basics">Básicas</span></button>
+      <button class="subcat-card" onclick="openProductGallery('camisas', 'polos')"><span data-es="Polos" data-en="Polos">Polos</span></button>
+      <button class="subcat-card" onclick="openProductGallery('camisas', 'manga-siza')"><span data-es="Manga Siza" data-en="Siza Sleeve">Manga Siza</span></button>
+    </div>
+  </div>
+
+  <!-- PANTALONES -->
+  <div class="category-section">
+    <h3 class="category-title" data-es="Pantalones" data-en="Pants">Pantalones</h3>
+    <div class="subcategory-grid">
+      <button class="subcat-card" onclick="openProductGallery('pantalones', 'bermudas')"><span data-es="Bermudas" data-en="Bermudas">Bermudas</span></button>
+      <button class="subcat-card" onclick="openProductGallery('pantalones', 'pantalonetas')"><span data-es="Pantalonetas" data-en="Shorts">Pantalonetas</span></button>
+      <button class="subcat-card" onclick="openProductGallery('pantalones', 'vaqueros')"><span data-es="Vaqueros" data-en="Chinos">Vaqueros</span></button>
+      <button class="subcat-card" onclick="openProductGallery('pantalones', 'jeans')"><span data-es="Jeans" data-en="Jeans">Jeans</span></button>
+    </div>
+  </div>
+
+  <!-- HOODIES & CROP TOPS -->
+  <div class="category-section">
+    <h3 class="category-title" data-es="Hoodies & Crop Tops" data-en="Hoodies & Crop Tops">Hoodies & Crop Tops</h3>
+    <div class="subcategory-grid">
+      <button class="subcat-card" onclick="openProductGallery('hoodies', 'sudaderas')"><span data-es="Sudaderas" data-en="Hoodies">Sudaderas</span></button>
+      <button class="subcat-card" onclick="openProductGallery('hoodies', 'crop-tops')"><span data-es="Crop Tops" data-en="Crop Tops">Crop Tops</span></button>
+      <button class="subcat-card" onclick="openProductGallery('hoodies', 'busos-capota')"><span data-es="Busos Capota" data-en="Hooded Shirts">Busos Capota</span></button>
+    </div>
+  </div>
+
+  <!-- CONJUNTOS -->
+  <div class="category-section">
+    <h3 class="category-title" data-es="Conjuntos" data-en="Sets">Conjuntos</h3>
+    <div class="subcategory-grid">
+      <button class="subcat-card" onclick="openProductGallery('conjuntos', 'hombre')"><span data-es="Conjuntos Hombre" data-en="Men's Sets">Conjuntos Hombre</span></button>
+      <button class="subcat-card" onclick="openProductGallery('conjuntos', 'mujer')"><span data-es="Conjuntos Mujer" data-en="Women's Sets">Conjuntos Mujer</span></button>
+    </div>
+  </div>
+
+  <!-- ACCESORIOS -->
+  <div class="category-section">
+    <h3 class="category-title" data-es="Accesorios" data-en="Accessories">Accesorios</h3>
+    <div class="subcategory-grid">
+      <button class="subcat-card" onclick="openProductGallery('accesorios', 'gorras')"><span data-es="Gorras" data-en="Caps">Gorras</span></button>
+      <button class="subcat-card" onclick="openProductGallery('accesorios', 'correas')"><span data-es="Correas" data-en="Belts">Correas</span></button>
+      <button class="subcat-card" onclick="openProductGallery('accesorios', 'relojes')"><span data-es="Relojes" data-en="Watches">Relojes</span></button>
+      <button class="subcat-card" onclick="openProductGallery('accesorios', 'zapatos')"><span data-es="Zapatos" data-en="Shoes">Zapatos</span></button>
+    </div>
+  </div>
+</section>
+
+<!-- DESCUENTOS -->
+<section class="sale" id="descuentos">
+  <h2 class="sale__title" data-es="DESCUENTOS" data-en="SALE">DESCUENTOS</h2>
+  <div class="sale-grid" id="saleGrid">
+    <div style="height: 200px; padding: 20px; display: flex; align-items: center; justify-content: center; color: var(--ink-3);" data-es="Prendas en descuento próximamente" data-en="Discounted items coming soon">Prendas en descuento próximamente</div>
+  </div>
+</section>
+
+<!-- UBICACIÓN (GOOGLE MAPS) -->
+<section class="ubicacion" id="ubicacion">
+  <h2 class="ubicacion__title" data-es="UBICACIÓN" data-en="LOCATION">UBICACIÓN</h2>
+  <div class="maps-container">
+    <iframe class="maps-frame" src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3978.251627850447!2d-75.18954622346945!3d4.8292649471424!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x8e38f3e4d0d0d0d1%3A0x1234567890abcdef!2sKapital%20Brands%20-%20Santa%20Rosa%20de%20Cabal!5e0!3m2!1ses!2sco!4v1722973200000" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+  </div>
+</section>
+
+<!-- MODAL PRODUCTO -->
+<div class="modal-overlay" id="productModal" onclick="if(event.target===this)closeProductModal()">
+  <div class="product-drawer">
+    <button class="drawer__close" onclick="closeProductModal()">✕</button>
+
+    <span class="drawer__cat" id="drawerCat"></span>
+    <h3 class="drawer__title" id="drawerTitle"></h3>
+    <p class="drawer__desc" id="drawerDesc"></p>
+
+    <div class="size-section">
+      <label class="size-label" data-es="Selecciona Talla(s)" data-en="Select Size(s)">Selecciona Talla(s)</label>
+      <div class="size-grid">
+        <button class="size-btn" onclick="toggleSize(this)">XS</button>
+        <button class="size-btn" onclick="toggleSize(this)">S</button>
+        <button class="size-btn" onclick="toggleSize(this)">M</button>
+        <button class="size-btn" onclick="toggleSize(this)">L</button>
+        <button class="size-btn" onclick="toggleSize(this)">XL</button>
+        <button class="size-btn" onclick="toggleSize(this)">2XL</button>
+        <button class="size-btn" onclick="toggleSize(this)">3XL</button>
+        <button class="size-btn" onclick="toggleSize(this)">4XL</button>
+      </div>
+    </div>
+
+    <div class="drawer__actions">
+      <button class="btn" onclick="closeProductModal()" data-es="Cerrar" data-en="Close">Cerrar</button>
+      <button class="btn btn-primary" onclick="sendToWhatsApp()" id="btnInteresado" data-es="Me Interesa" data-en="I'm Interested">Me Interesa</button>
+    </div>
+  </div>
+</div>
+
+<script>
+const WHATSAPP_NUMBER = '573056949087';
+let currentLanguage = 'es';
+let selectedSizes = [];
+let currentCategory = null;
+let currentSubcategory = null;
+
+const defaultDescriptions = {
+  'camisas-oversize': { es: 'Camiseta Oversize Kapital. Confeccionada en algodón 100% premium, con fit relajado perfecto para estilo urbano. Disponible en múltiples colores.', en: 'Kapital Oversize Shirt. Made from 100% premium cotton, with a relaxed fit perfect for urban style. Available in multiple colors.' },
+  'camisas-basicas': { es: 'Camiseta Básica Kapital. Pieza esencial de tu guardarropa urbano. Algodón 100%, color sólido, perfecto para combinar.', en: 'Kapital Basic Shirt. Essential piece of your urban wardrobe. 100% cotton, solid color, perfect to mix and match.' },
+  'camisas-polos': { es: 'Polo Kapital. Elegancia casual en una pieza. Algodón piqué, cuello estructurado, ideal para cualquier ocasión.', en: 'Kapital Polo. Casual elegance in one piece. Pique cotton, structured collar, ideal for any occasion.' },
+  'camisas-manga-siza': { es: 'Camiseta Manga Siza Kapital. Diseño exclusivo con manga característica. Algodón premium, corte moderno.', en: 'Kapital Siza Sleeve Shirt. Exclusive design with characteristic sleeve. Premium cotton, modern fit.' },
+  'pantalones-bermudas': { es: 'Bermudas Kapital. Comodidad y estilo para clima cálido. Tela resistente, múltiples bolsillos, ajuste perfecto.', en: 'Kapital Bermudas. Comfort and style for warm weather. Durable fabric, multiple pockets, perfect fit.' },
+  'pantalones-pantalonetas': { es: 'Pantalonetas Kapital. Perfeccionadas para actividades. Tela transpirable, diseño funcional, colores vibrantes.', en: 'Kapital Shorts. Perfected for activities. Breathable fabric, functional design, vibrant colors.' },
+  'pantalones-vaqueros': { es: 'Vaqueros Kapital. Pieza clásica reimaginada. Tela de calidad, corte versátil, detalles cuidados.', en: 'Kapital Chinos. Classic piece reimagined. Quality fabric, versatile cut, careful details.' },
+  'pantalones-jeans': { es: 'Jeans Kapital. El denim que necesitas. Tela 100% algodón, ajuste cómodo, estilos variados.', en: 'Kapital Jeans. The denim you need. 100% cotton fabric, comfortable fit, varied styles.' },
+  'hoodies-sudaderas': { es: 'Sudadera Kapital. Calidez y confort. Algodón francés, bordes acanalados, disponible en hombre y mujer.', en: 'Kapital Hoodie. Warmth and comfort. French cotton, ribbed edges, available in men\'s and women\'s.' },
+  'hoodies-crop-tops': { es: 'Crop Top Kapital. Estilo y actitud. Corte moderno, tela premium, perfecto para cualquier atuendo.', en: 'Kapital Crop Top. Style and attitude. Modern cut, premium fabric, perfect for any outfit.' },
+  'hoodies-busos-capota': { es: 'Buso Capota Kapital. Lo mejor de ambos mundos. Capota funcional, bolsillos amplios, diseño moderno.', en: 'Kapital Hooded Shirt. The best of both worlds. Functional hood, spacious pockets, modern design.' },
+  'conjuntos-hombre': { es: 'Conjunto Kapital Hombre. Combina en un set: camiseta + pantalón. Coordinación perfecta, estilo asegurado.', en: 'Kapital Men\'s Set. Combines in one set: shirt + pants. Perfect coordination, guaranteed style.' },
+  'conjuntos-mujer': { es: 'Conjunto Kapital Mujer. Set coordinado para un look completo. Diseño moderno, telas premium.', en: 'Kapital Women\'s Set. Coordinated set for a complete look. Modern design, premium fabrics.' },
+  'accesorios-gorras': { es: 'Gorra Kapital. Accesorio esencial. Tela resistente, ajuste cómodo, múltiples diseños.', en: 'Kapital Cap. Essential accessory. Durable fabric, comfortable fit, multiple designs.' },
+  'accesorios-correas': { es: 'Correa Kapital. Complementa tu estilo. Cuero genuino o alternativa, hebilla de calidad.', en: 'Kapital Belt. Complete your style. Genuine leather or alternative, quality buckle.' },
+  'accesorios-relojes': { es: 'Reloj Kapital. Funcionalidad y diseño. Mecanismo confiable, correa cómoda, resistente.', en: 'Kapital Watch. Functionality and design. Reliable mechanism, comfortable strap, durable.' },
+  'accesorios-zapatos': { es: 'Zapatos Kapital. Comodidad en cada paso. Diseño moderno, materiales de calidad, ajuste perfecto.', en: 'Kapital Shoes. Comfort in every step. Modern design, quality materials, perfect fit.' }
+};
+
+function setLanguage(lang) {
+  currentLanguage = lang;
+  document.querySelectorAll('[data-es][data-en]').forEach(el => {
+    el.textContent = el.getAttribute(`data-${lang}`);
+  });
+  document.querySelectorAll('.lang-btn').forEach(btn => btn.classList.remove('active'));
+  event.target.classList.add('active');
+  localStorage.setItem('kapital_lang', lang);
+}
+
+window.addEventListener('DOMContentLoaded', () => {
+  const savedLang = localStorage.getItem('kapital_lang') || 'es';
+  document.querySelector(`[onclick="setLanguage('${savedLang}')"]`)?.click();
+});
+
+function openProductGallery(category, subcategory) {
+  currentCategory = category;
+  currentSubcategory = subcategory;
+  selectedSizes = [];
+  const key = `${category}-${subcategory}`;
+  const label = document.querySelector(`[onclick="openProductGallery('${category}', '${subcategory}')"]`)?.textContent || subcategory;
+  const desc = defaultDescriptions[key] || { es: 'Producto Kapital', en: 'Kapital Product' };
+  document.getElementById('drawerCat').textContent = label;
+  document.getElementById('drawerTitle').textContent = label;
+  document.getElementById('drawerDesc').textContent = desc[currentLanguage];
+  document.querySelectorAll('.size-btn').forEach(btn => btn.classList.remove('selected'));
+  document.getElementById('productModal').classList.add('open');
+}
+
+function closeProductModal() {
+  document.getElementById('productModal').classList.remove('open');
+  selectedSizes = [];
+}
+
+function toggleSize(btn) {
+  btn.classList.toggle('selected');
+  selectedSizes = Array.from(document.querySelectorAll('.size-btn.selected')).map(b => b.textContent);
+}
+
+function sendToWhatsApp() {
+  if (selectedSizes.length === 0) {
+    alert(currentLanguage === 'es' ? 'Por favor selecciona al menos una talla' : 'Please select at least one size');
+    return;
+  }
+  const label = document.getElementById('drawerTitle').textContent;
+  const sizes = selectedSizes.join(', ');
+  const message = currentLanguage === 'es'
+    ? `Hola, me interesa el producto: ${label} en talla(s): ${sizes}`
+    : `Hi, I'm interested in: ${label} in size(s): ${sizes}`;
+  const waLink = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(message)}`;
+  window.open(waLink, '_blank');
+}
+
+function openBag() {
+  alert(currentLanguage === 'es' ? 'Bag abierto' : 'Bag opened');
+}
+
+function toggleMenu() {
+  alert(currentLanguage === 'es' ? 'Menú móvil' : 'Mobile menu');
+}
+
+setInterval(() => {
+  const desc = defaultDescriptions[`${currentCategory}-${currentSubcategory}`];
+  if (desc && document.getElementById('productModal').classList.contains('open')) {
+    document.getElementById('drawerDesc').textContent = desc[currentLanguage];
+  }
+}, 100);
+</script>
+
+</body>
+</html>
