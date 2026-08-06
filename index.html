@@ -899,7 +899,7 @@ button { cursor: pointer; font-family: inherit; }
 <section class="ubicacion" id="ubicacion">
   <h2 class="ubicacion__title" data-es="UBICACIÓN" data-en="LOCATION">UBICACIÓN</h2>
   <div class="maps-container">
-    <iframe class="maps-frame" src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3978.251627850447!2d-75.18954622346945!3d4.8292649471424!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x8e38f3e4d0d0d0d1%3A0x1234567890abcdef!2sKapital%20Brands%20-%20Santa%20Rosa%20de%20Cabal!5e0!3m2!1ses!2sco!4v1722973200000" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+    <iframe class="maps-frame" src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3978.126827505124!2d-75.63207509999999!3d4.835219!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x8e40222d2d2d2d2d%3A0x0!2sKapital%20Santa%20Rosa%20de%20Cabal!5e0!3m2!1ses!2sco!4v1722975619420" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
   </div>
 </section>
 
@@ -980,6 +980,155 @@ function openProductGallery(category, subcategory) {
   currentSubcategory = subcategory;
   selectedSizes = [];
   const key = `${category}-${subcategory}`;
+  
+  // Get the label from button
+  const label = document.querySelector(`[onclick="openProductGallery('${category}', '${subcategory}')"]`)?.textContent || subcategory;
+  
+  // Show gallery modal with images
+  showGalleryModal(label, category, subcategory);
+}
+
+function showGalleryModal(label, category, subcategory) {
+  // Create and display gallery
+  const modalGallery = document.getElementById('galleryModal');
+  if (!modalGallery) {
+    // Create gallery modal if it doesn't exist
+    const gallery = document.createElement('div');
+    gallery.id = 'galleryModal';
+    gallery.className = 'modal-overlay';
+    gallery.innerHTML = `
+      <div class="gallery-modal">
+        <button class="modal-close" onclick="closeGallery()">✕</button>
+        <h3 class="gallery-title">${label}</h3>
+        <p style="margin-bottom: 24px; color: var(--ink-2);">Haz click en una prenda para seleccionar talla</p>
+        <div class="gallery-grid" id="galleryGrid"></div>
+      </div>
+    `;
+    document.body.appendChild(gallery);
+    
+    // Add styles if not present
+    if (!document.getElementById('galleryStyles')) {
+      const style = document.createElement('style');
+      style.id = 'galleryStyles';
+      style.textContent = `
+        .modal-overlay {
+          position: fixed;
+          inset: 0;
+          background: rgba(0, 0, 0, 0.9);
+          z-index: 200;
+          display: none;
+          align-items: center;
+          justify-content: center;
+        }
+        .modal-overlay.open { display: flex; }
+        .gallery-modal {
+          background: var(--surface-2);
+          border: 2px solid var(--neon);
+          border-radius: 4px;
+          padding: 40px;
+          max-width: 900px;
+          width: 90%;
+          max-height: 85vh;
+          overflow-y: auto;
+          position: relative;
+        }
+        .modal-close {
+          position: absolute;
+          top: 20px;
+          right: 20px;
+          background: none;
+          border: none;
+          color: var(--neon);
+          font-size: 1.8rem;
+          cursor: pointer;
+        }
+        .gallery-title {
+          font-family: var(--font-display);
+          font-size: 2rem;
+          margin-bottom: 24px;
+          color: var(--neon);
+        }
+        .gallery-grid {
+          display: grid;
+          grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+          gap: 16px;
+          margin-bottom: 24px;
+        }
+        .gallery-item {
+          aspect-ratio: 3/4;
+          background: linear-gradient(135deg, var(--neon) 0%, var(--neon) 100%);
+          border: 2px solid var(--neon);
+          cursor: pointer;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          color: #000;
+          font-weight: bold;
+          font-size: 0.9rem;
+          transition: all 0.3s;
+          opacity: 0.6;
+        }
+        .gallery-item:hover {
+          opacity: 1;
+          transform: scale(1.05);
+          box-shadow: 0 0 30px rgba(212, 175, 55, 0.6);
+        }
+        .gallery-item.selected {
+          border-width: 3px;
+          box-shadow: 0 0 40px rgba(212, 175, 55, 0.8);
+        }
+      `;
+      document.head.appendChild(style);
+    }
+  }
+  
+  // Generate gallery items
+  const gallery = document.getElementById('galleryGrid');
+  gallery.innerHTML = '';
+  for (let i = 1; i <= 6; i++) {
+    const item = document.createElement('div');
+    item.className = 'gallery-item';
+    item.textContent = `Prenda ${i}`;
+    item.onclick = () => selectGalleryItem(item, i, label);
+    gallery.appendChild(item);
+  }
+  
+  document.getElementById('galleryModal').classList.add('open');
+}
+
+function selectGalleryItem(element, itemId, label) {
+  // Remove previous selection
+  document.querySelectorAll('.gallery-item').forEach(item => {
+    item.classList.remove('selected');
+  });
+  
+  // Select this item
+  element.classList.add('selected');
+  
+  // Close gallery and show product modal with size selector
+  closeGallery();
+  showProductWithSizes(label, itemId);
+}
+
+function closeGallery() {
+  const modalGallery = document.getElementById('galleryModal');
+  if (modalGallery) {
+    modalGallery.classList.remove('open');
+  }
+}
+
+function showProductWithSizes(label, itemId) {
+  // Show size selector in product modal
+  currentGalleryItem = itemId;
+  const key = `${currentCategory}-${currentSubcategory}`;
+  const desc = defaultDescriptions[key] || { es: 'Producto Kapital', en: 'Kapital Product' };
+  
+  document.getElementById('drawerCat').textContent = label;
+  document.getElementById('drawerTitle').textContent = `${label} - Prenda ${itemId}`;
+  document.getElementById('drawerDesc').textContent = desc[currentLanguage];
+  document.querySelectorAll('.size-btn').forEach(btn => btn.classList.remove('selected'));
+  document.getElementById('productModal').classList.add('open');
+}-${subcategory}`;
   const label = document.querySelector(`[onclick="openProductGallery('${category}', '${subcategory}')"]`)?.textContent || subcategory;
   const desc = defaultDescriptions[key] || { es: 'Producto Kapital', en: 'Kapital Product' };
   document.getElementById('drawerCat').textContent = label;
