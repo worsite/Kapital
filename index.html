@@ -766,24 +766,58 @@ button { cursor: pointer; font-family: inherit; }
 </head>
 <body>
 
-<!-- FONDO HEXAGONAL SIMÉTRICO -->
+<!-- FONDO HEXAGONAL CONTINUO Y SIMÉTRICO -->
 <div class="neon-canvas">
-  <svg viewBox="0 0 1400 1400" preserveAspectRatio="xMidYMid slice" style="opacity: 0.6;">
-    <!-- FILA SUPERIOR CENTRAL -->
-    <path class="hex hex--a" d="M 350 150 L 430 110 L 510 150 L 510 270 L 430 310 L 350 270 Z"/>
-    <path class="hex hex--b" d="M 700 150 L 780 110 L 860 150 L 860 270 L 780 310 L 700 270 Z"/>
-    <path class="hex hex--c" d="M 1050 150 L 1130 110 L 1210 150 L 1210 270 L 1130 310 L 1050 270 Z"/>
+  <svg viewBox="0 0 1400 1400" preserveAspectRatio="xMidYMid slice" style="opacity: 0.7;">
+    <!-- MALLA HEXAGONAL DENSA - Hexágonos compactos sin espacios -->
 
-    <!-- FILA MEDIA -->
-    <path class="hex hex--d" d="M 175 450 L 255 410 L 335 450 L 335 570 L 255 610 L 175 570 Z"/>
-    <path class="hex hex--e" d="M 525 450 L 605 410 L 685 450 L 685 570 L 605 610 L 525 570 Z"/>
-    <path class="hex hex--f" d="M 875 450 L 955 410 L 1035 450 L 1035 570 L 955 610 L 875 570 Z"/>
-    <path class="hex hex--a" d="M 1225 450 L 1305 410 L 1385 450 L 1385 570 L 1305 610 L 1225 570 Z"/>
+    <!-- FILA 1 -->
+    <path class="hex hex--a" d="M 200 100 L 260 70 L 320 100 L 320 200 L 260 230 L 200 200 Z"/>
+    <path class="hex hex--b" d="M 380 100 L 440 70 L 500 100 L 500 200 L 440 230 L 380 200 Z"/>
+    <path class="hex hex--c" d="M 560 100 L 620 70 L 680 100 L 680 200 L 620 230 L 560 200 Z"/>
+    <path class="hex hex--d" d="M 740 100 L 800 70 L 860 100 L 860 200 L 800 230 L 740 200 Z"/>
+    <path class="hex hex--e" d="M 920 100 L 980 70 L 1040 100 L 1040 200 L 980 230 L 920 200 Z"/>
+    <path class="hex hex--f" d="M 1100 100 L 1160 70 L 1220 100 L 1220 200 L 1160 230 L 1100 200 Z"/>
 
-    <!-- FILA INFERIOR -->
-    <path class="hex hex--b" d="M 350 750 L 430 710 L 510 750 L 510 870 L 430 910 L 350 870 Z"/>
-    <path class="hex hex--c" d="M 700 750 L 780 710 L 860 750 L 860 870 L 780 910 L 700 870 Z"/>
-    <path class="hex hex--d" d="M 1050 750 L 1130 710 L 1210 750 L 1210 870 L 1130 910 L 1050 870 Z"/>
+    <!-- FILA 2 (desplazada) -->
+    <path class="hex hex--b" d="M 290 200 L 350 170 L 410 200 L 410 300 L 350 330 L 290 300 Z"/>
+    <path class="hex hex--c" d="M 470 200 L 530 170 L 590 200 L 590 300 L 530 330 L 470 300 Z"/>
+    <path class="hex hex--d" d="M 650 200 L 710 170 L 770 200 L 770 300 L 710 330 L 650 300 Z"/>
+    <path class="hex hex--e" d="M 830 200 L 890 170 L 950 200 L 950 300 L 890 330 L 830 300 Z"/>
+    <path class="hex hex--f" d="M 1010 200 L 1070 170 L 1130 200 L 1130 300 L 1070 330 L 1010 300 Z"/>
+    <path class="hex hex--a" d="M 1190 200 L 1250 170 L 1310 200 L 1310 300 L 1250 330 L 1190 300 Z"/>
+
+    <!-- FILA 3 -->
+    <path class="hex hex--c" d="M 200 300 L 260 270 L 320 300 L 320 400 L 260 430 L 200 400 Z"/>
+    <path class="hex hex--d" d="M 380 300 L 440 270 L 500 300 L 500 400 L 440 430 L 380 400 Z"/>
+    <path class="hex hex--e" d="M 560 300 L 620 270 L 680 300 L 680 400 L 620 430 L 560 400 Z"/>
+    <path class="hex hex--f" d="M 740 300 L 800 270 L 860 300 L 860 400 L 800 430 L 740 400 Z"/>
+    <path class="hex hex--a" d="M 920 300 L 980 270 L 1040 300 L 1040 400 L 980 430 L 920 400 Z"/>
+    <path class="hex hex--b" d="M 1100 300 L 1160 270 L 1220 300 L 1220 400 L 1160 430 L 1100 400 Z"/>
+
+    <!-- FILA 4 (desplazada) -->
+    <path class="hex hex--d" d="M 290 400 L 350 370 L 410 400 L 410 500 L 350 530 L 290 500 Z"/>
+    <path class="hex hex--e" d="M 470 400 L 530 370 L 590 400 L 590 500 L 530 530 L 470 500 Z"/>
+    <path class="hex hex--f" d="M 650 400 L 710 370 L 770 400 L 770 500 L 710 530 L 650 500 Z"/>
+    <path class="hex hex--a" d="M 830 400 L 890 370 L 950 400 L 950 500 L 890 530 L 830 500 Z"/>
+    <path class="hex hex--b" d="M 1010 400 L 1070 370 L 1130 400 L 1130 500 L 1070 530 L 1010 500 Z"/>
+    <path class="hex hex--c" d="M 1190 400 L 1250 370 L 1310 400 L 1310 500 L 1250 530 L 1190 500 Z"/>
+
+    <!-- FILA 5 -->
+    <path class="hex hex--e" d="M 200 500 L 260 470 L 320 500 L 320 600 L 260 630 L 200 600 Z"/>
+    <path class="hex hex--f" d="M 380 500 L 440 470 L 500 500 L 500 600 L 440 630 L 380 600 Z"/>
+    <path class="hex hex--a" d="M 560 500 L 620 470 L 680 500 L 680 600 L 620 630 L 560 600 Z"/>
+    <path class="hex hex--b" d="M 740 500 L 800 470 L 860 500 L 860 600 L 800 630 L 740 600 Z"/>
+    <path class="hex hex--c" d="M 920 500 L 980 470 L 1040 500 L 1040 600 L 980 630 L 920 600 Z"/>
+    <path class="hex hex--d" d="M 1100 500 L 1160 470 L 1220 500 L 1220 600 L 1160 630 L 1100 600 Z"/>
+
+    <!-- FILA 6 (desplazada) -->
+    <path class="hex hex--f" d="M 290 600 L 350 570 L 410 600 L 410 700 L 350 730 L 290 700 Z"/>
+    <path class="hex hex--a" d="M 470 600 L 530 570 L 590 600 L 590 700 L 530 730 L 470 700 Z"/>
+    <path class="hex hex--b" d="M 650 600 L 710 570 L 770 600 L 770 700 L 710 730 L 650 700 Z"/>
+    <path class="hex hex--c" d="M 830 600 L 890 570 L 950 600 L 950 700 L 890 730 L 830 700 Z"/>
+    <path class="hex hex--d" d="M 1010 600 L 1070 570 L 1130 600 L 1130 700 L 1070 730 L 1010 700 Z"/>
+    <path class="hex hex--e" d="M 1190 600 L 1250 570 L 1310 600 L 1310 700 L 1250 730 L 1190 700 Z"/>
   </svg>
 </div>
 
