@@ -457,6 +457,96 @@ button { cursor: pointer; font-family: inherit; }
   to { opacity: 1; backdrop-filter: blur(4px); }
 }
 
+/* GALLERY MODAL */
+.gallery-modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.95);
+  z-index: 250;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  backdrop-filter: blur(8px);
+}
+
+.gallery-modal-overlay.open {
+  display: flex;
+}
+
+.gallery-modal-content {
+  background: var(--surface-2);
+  border: 2px solid var(--neon);
+  border-radius: 4px;
+  padding: 40px;
+  max-width: 900px;
+  width: 90%;
+  max-height: 85vh;
+  overflow-y: auto;
+  position: relative;
+  animation: modal-fade-in var(--dur-mid) var(--ease-out-quart);
+}
+
+.gallery-modal-close {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  background: none;
+  border: none;
+  color: var(--neon);
+  font-size: 1.8rem;
+  cursor: pointer;
+  transition: color var(--dur-fast);
+}
+
+.gallery-modal-close:hover {
+  color: var(--ink);
+}
+
+.gallery-modal-title {
+  font-family: var(--font-display);
+  font-size: 2rem;
+  margin-bottom: 24px;
+  color: var(--neon);
+  font-weight: 600;
+}
+
+.gallery-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  gap: 16px;
+  margin-bottom: 24px;
+}
+
+.gallery-grid-item {
+  aspect-ratio: 3/4;
+  background: linear-gradient(135deg, var(--neon) 0%, rgba(212, 175, 55, 0.8) 100%);
+  border: 2px solid var(--neon);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #000;
+  font-weight: bold;
+  font-size: 0.9rem;
+  transition: all var(--dur-fast);
+  opacity: 0.7;
+  text-align: center;
+  padding: 12px;
+  border-radius: 2px;
+}
+
+.gallery-grid-item:hover {
+  opacity: 1;
+  transform: scale(1.08);
+  box-shadow: 0 0 30px rgba(212, 175, 55, 0.7);
+}
+
+.gallery-grid-item.selected {
+  border-width: 3px;
+  opacity: 1;
+  box-shadow: 0 0 50px rgba(212, 175, 55, 0.9);
+}
+
 .product-drawer {
   position: relative;
   background: var(--surface);
@@ -766,24 +856,50 @@ button { cursor: pointer; font-family: inherit; }
 </head>
 <body>
 
-<!-- FONDO HEXAGONAL SIMÉTRICO -->
+<!-- FONDO HEXAGONAL DORADO - Sin solapamiento -->
 <div class="neon-canvas">
-  <svg viewBox="0 0 1400 1400" preserveAspectRatio="xMidYMid slice" style="opacity: 0.6;">
-    <!-- FILA SUPERIOR CENTRAL -->
-    <path class="hex hex--a" d="M 350 150 L 430 110 L 510 150 L 510 270 L 430 310 L 350 270 Z"/>
-    <path class="hex hex--b" d="M 700 150 L 780 110 L 860 150 L 860 270 L 780 310 L 700 270 Z"/>
-    <path class="hex hex--c" d="M 1050 150 L 1130 110 L 1210 150 L 1210 270 L 1130 310 L 1050 270 Z"/>
+  <svg viewBox="0 0 1400 1200" preserveAspectRatio="xMidYMid slice" style="opacity: 0.8;">
+    <!-- FILA 1 - Espaciado perfecto -->
+    <path class="hex hex--a" d="M 100 100 L 160 70 L 220 100 L 220 200 L 160 230 L 100 200 Z"/>
+    <path class="hex hex--b" d="M 280 100 L 340 70 L 400 100 L 400 200 L 340 230 L 280 200 Z"/>
+    <path class="hex hex--c" d="M 460 100 L 520 70 L 580 100 L 580 200 L 520 230 L 460 200 Z"/>
+    <path class="hex hex--a" d="M 640 100 L 700 70 L 760 100 L 760 200 L 700 230 L 640 200 Z"/>
+    <path class="hex hex--b" d="M 820 100 L 880 70 L 940 100 L 940 200 L 880 230 L 820 200 Z"/>
+    <path class="hex hex--c" d="M 1000 100 L 1060 70 L 1120 100 L 1120 200 L 1060 230 L 1000 200 Z"/>
+    <path class="hex hex--a" d="M 1180 100 L 1240 70 L 1300 100 L 1300 200 L 1240 230 L 1180 200 Z"/>
 
-    <!-- FILA MEDIA -->
-    <path class="hex hex--d" d="M 175 450 L 255 410 L 335 450 L 335 570 L 255 610 L 175 570 Z"/>
-    <path class="hex hex--e" d="M 525 450 L 605 410 L 685 450 L 685 570 L 605 610 L 525 570 Z"/>
-    <path class="hex hex--f" d="M 875 450 L 955 410 L 1035 450 L 1035 570 L 955 610 L 875 570 Z"/>
-    <path class="hex hex--a" d="M 1225 450 L 1305 410 L 1385 450 L 1385 570 L 1305 610 L 1225 570 Z"/>
+    <!-- FILA 2 - Desplazada -->
+    <path class="hex hex--c" d="M 190 250 L 250 220 L 310 250 L 310 350 L 250 380 L 190 350 Z"/>
+    <path class="hex hex--a" d="M 370 250 L 430 220 L 490 250 L 490 350 L 430 380 L 370 350 Z"/>
+    <path class="hex hex--b" d="M 550 250 L 610 220 L 670 250 L 670 350 L 610 380 L 550 350 Z"/>
+    <path class="hex hex--c" d="M 730 250 L 790 220 L 850 250 L 850 350 L 790 380 L 730 350 Z"/>
+    <path class="hex hex--a" d="M 910 250 L 970 220 L 1030 250 L 1030 350 L 970 380 L 910 350 Z"/>
+    <path class="hex hex--b" d="M 1090 250 L 1150 220 L 1210 250 L 1210 350 L 1150 380 L 1090 350 Z"/>
 
-    <!-- FILA INFERIOR -->
-    <path class="hex hex--b" d="M 350 750 L 430 710 L 510 750 L 510 870 L 430 910 L 350 870 Z"/>
-    <path class="hex hex--c" d="M 700 750 L 780 710 L 860 750 L 860 870 L 780 910 L 700 870 Z"/>
-    <path class="hex hex--d" d="M 1050 750 L 1130 710 L 1210 750 L 1210 870 L 1130 910 L 1050 870 Z"/>
+    <!-- FILA 3 -->
+    <path class="hex hex--b" d="M 100 400 L 160 370 L 220 400 L 220 500 L 160 530 L 100 500 Z"/>
+    <path class="hex hex--c" d="M 280 400 L 340 370 L 400 400 L 400 500 L 340 530 L 280 500 Z"/>
+    <path class="hex hex--a" d="M 460 400 L 520 370 L 580 400 L 580 500 L 520 530 L 460 500 Z"/>
+    <path class="hex hex--b" d="M 640 400 L 700 370 L 760 400 L 760 500 L 700 530 L 640 500 Z"/>
+    <path class="hex hex--c" d="M 820 400 L 880 370 L 940 400 L 940 500 L 880 530 L 820 500 Z"/>
+    <path class="hex hex--a" d="M 1000 400 L 1060 370 L 1120 400 L 1120 500 L 1060 530 L 1000 500 Z"/>
+    <path class="hex hex--b" d="M 1180 400 L 1240 370 L 1300 400 L 1300 500 L 1240 530 L 1180 500 Z"/>
+
+    <!-- FILA 4 - Desplazada -->
+    <path class="hex hex--a" d="M 190 550 L 250 520 L 310 550 L 310 650 L 250 680 L 190 650 Z"/>
+    <path class="hex hex--b" d="M 370 550 L 430 520 L 490 550 L 490 650 L 430 680 L 370 650 Z"/>
+    <path class="hex hex--c" d="M 550 550 L 610 520 L 670 550 L 670 650 L 610 680 L 550 650 Z"/>
+    <path class="hex hex--a" d="M 730 550 L 790 520 L 850 550 L 850 650 L 790 680 L 730 650 Z"/>
+    <path class="hex hex--b" d="M 910 550 L 970 520 L 1030 550 L 1030 650 L 970 680 L 910 650 Z"/>
+    <path class="hex hex--c" d="M 1090 550 L 1150 520 L 1210 550 L 1210 650 L 1150 680 L 1090 650 Z"/>
+
+    <!-- FILA 5 -->
+    <path class="hex hex--c" d="M 100 700 L 160 670 L 220 700 L 220 800 L 160 830 L 100 800 Z"/>
+    <path class="hex hex--a" d="M 280 700 L 340 670 L 400 700 L 400 800 L 340 830 L 280 800 Z"/>
+    <path class="hex hex--b" d="M 460 700 L 520 670 L 580 700 L 580 800 L 520 830 L 460 800 Z"/>
+    <path class="hex hex--c" d="M 640 700 L 700 670 L 760 700 L 760 800 L 700 830 L 640 800 Z"/>
+    <path class="hex hex--a" d="M 820 700 L 880 670 L 940 700 L 940 800 L 880 830 L 820 800 Z"/>
+    <path class="hex hex--b" d="M 1000 700 L 1060 670 L 1120 700 L 1120 800 L 1060 830 L 1000 800 Z"/>
   </svg>
 </div>
 
@@ -899,7 +1015,7 @@ button { cursor: pointer; font-family: inherit; }
 <section class="ubicacion" id="ubicacion">
   <h2 class="ubicacion__title" data-es="UBICACIÓN" data-en="LOCATION">UBICACIÓN</h2>
   <div class="maps-container">
-    <iframe class="maps-frame" src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3978.126827505124!2d-75.63207509999999!3d4.835219!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x8e40222d2d2d2d2d%3A0x0!2sKapital%20Santa%20Rosa%20de%20Cabal!5e0!3m2!1ses!2sco!4v1722975619420" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+    <iframe class="maps-frame" src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3978.126827505124!2d-75.63207509999999!3d4.835219!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x8e40222d2d2d2d2d%3A0xkapital!2sKapital!5e0!3m2!1ses!2sco!4v1722975619420" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
   </div>
 </section>
 
@@ -975,164 +1091,71 @@ window.addEventListener('DOMContentLoaded', () => {
   document.querySelector(`[onclick="setLanguage('${savedLang}')"]`)?.click();
 });
 
+let currentGalleryItem = null;
+
 function openProductGallery(category, subcategory) {
   currentCategory = category;
   currentSubcategory = subcategory;
   selectedSizes = [];
-  const key = `${category}-${subcategory}`;
-  
-  // Get the label from button
   const label = document.querySelector(`[onclick="openProductGallery('${category}', '${subcategory}')"]`)?.textContent || subcategory;
-  
-  // Show gallery modal with images
-  showGalleryModal(label, category, subcategory);
+
+  // First: Show gallery with all images for this subcategory
+  showGalleryModal(label);
 }
 
-function showGalleryModal(label, category, subcategory) {
-  // Create and display gallery
-  const modalGallery = document.getElementById('galleryModal');
-  if (!modalGallery) {
-    // Create gallery modal if it doesn't exist
-    const gallery = document.createElement('div');
-    gallery.id = 'galleryModal';
-    gallery.className = 'modal-overlay';
-    gallery.innerHTML = `
-      <div class="gallery-modal">
-        <button class="modal-close" onclick="closeGallery()">✕</button>
-        <h3 class="gallery-title">${label}</h3>
-        <p style="margin-bottom: 24px; color: var(--ink-2);">Haz click en una prenda para seleccionar talla</p>
+function showGalleryModal(label) {
+  // Create gallery modal if it doesn't exist
+  let modal = document.getElementById('galleryModal');
+  if (!modal) {
+    modal = document.createElement('div');
+    modal.id = 'galleryModal';
+    modal.className = 'gallery-modal-overlay';
+    modal.innerHTML = `
+      <div class="gallery-modal-content">
+        <button class="gallery-modal-close" onclick="closeGalleryModal()">✕</button>
+        <h3 class="gallery-modal-title" id="galleryTitle"></h3>
+        <p id="galleryInst" style="margin-bottom: 24px; color: var(--ink-2);">Haz click en una prenda para seleccionar talla</p>
         <div class="gallery-grid" id="galleryGrid"></div>
       </div>
     `;
-    document.body.appendChild(gallery);
-    
-    // Add styles if not present
-    if (!document.getElementById('galleryStyles')) {
-      const style = document.createElement('style');
-      style.id = 'galleryStyles';
-      style.textContent = `
-        .modal-overlay {
-          position: fixed;
-          inset: 0;
-          background: rgba(0, 0, 0, 0.9);
-          z-index: 200;
-          display: none;
-          align-items: center;
-          justify-content: center;
-        }
-        .modal-overlay.open { display: flex; }
-        .gallery-modal {
-          background: var(--surface-2);
-          border: 2px solid var(--neon);
-          border-radius: 4px;
-          padding: 40px;
-          max-width: 900px;
-          width: 90%;
-          max-height: 85vh;
-          overflow-y: auto;
-          position: relative;
-        }
-        .modal-close {
-          position: absolute;
-          top: 20px;
-          right: 20px;
-          background: none;
-          border: none;
-          color: var(--neon);
-          font-size: 1.8rem;
-          cursor: pointer;
-        }
-        .gallery-title {
-          font-family: var(--font-display);
-          font-size: 2rem;
-          margin-bottom: 24px;
-          color: var(--neon);
-        }
-        .gallery-grid {
-          display: grid;
-          grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-          gap: 16px;
-          margin-bottom: 24px;
-        }
-        .gallery-item {
-          aspect-ratio: 3/4;
-          background: linear-gradient(135deg, var(--neon) 0%, var(--neon) 100%);
-          border: 2px solid var(--neon);
-          cursor: pointer;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          color: #000;
-          font-weight: bold;
-          font-size: 0.9rem;
-          transition: all 0.3s;
-          opacity: 0.6;
-        }
-        .gallery-item:hover {
-          opacity: 1;
-          transform: scale(1.05);
-          box-shadow: 0 0 30px rgba(212, 175, 55, 0.6);
-        }
-        .gallery-item.selected {
-          border-width: 3px;
-          box-shadow: 0 0 40px rgba(212, 175, 55, 0.8);
-        }
-      `;
-      document.head.appendChild(style);
-    }
+    document.body.appendChild(modal);
   }
-  
-  // Generate gallery items
-  const gallery = document.getElementById('galleryGrid');
-  gallery.innerHTML = '';
+
+  // Update title and show modal
+  document.getElementById('galleryTitle').textContent = label;
+  document.getElementById('galleryInst').textContent = currentLanguage === 'es' ? 'Haz click en una prenda para seleccionar talla' : 'Click on a product to select size';
+
+  // Generate 6 product images
+  const grid = document.getElementById('galleryGrid');
+  grid.innerHTML = '';
   for (let i = 1; i <= 6; i++) {
     const item = document.createElement('div');
-    item.className = 'gallery-item';
+    item.className = 'gallery-grid-item';
     item.textContent = `Prenda ${i}`;
-    item.onclick = () => selectGalleryItem(item, i, label);
-    gallery.appendChild(item);
+    item.onclick = () => selectGalleryItem(i, label);
+    grid.appendChild(item);
   }
-  
-  document.getElementById('galleryModal').classList.add('open');
+
+  modal.classList.add('open');
 }
 
-function selectGalleryItem(element, itemId, label) {
-  // Remove previous selection
-  document.querySelectorAll('.gallery-item').forEach(item => {
-    item.classList.remove('selected');
-  });
-  
-  // Select this item
-  element.classList.add('selected');
-  
-  // Close gallery and show product modal with size selector
-  closeGallery();
-  showProductWithSizes(label, itemId);
-}
-
-function closeGallery() {
-  const modalGallery = document.getElementById('galleryModal');
-  if (modalGallery) {
-    modalGallery.classList.remove('open');
+function closeGalleryModal() {
+  const modal = document.getElementById('galleryModal');
+  if (modal) {
+    modal.classList.remove('open');
   }
 }
 
-function showProductWithSizes(label, itemId) {
-  // Show size selector in product modal
+function selectGalleryItem(itemId, label) {
   currentGalleryItem = itemId;
+  closeGalleryModal();
+
+  // Now open product modal with size selector
   const key = `${currentCategory}-${currentSubcategory}`;
   const desc = defaultDescriptions[key] || { es: 'Producto Kapital', en: 'Kapital Product' };
-  
+
   document.getElementById('drawerCat').textContent = label;
   document.getElementById('drawerTitle').textContent = `${label} - Prenda ${itemId}`;
-  document.getElementById('drawerDesc').textContent = desc[currentLanguage];
-  document.querySelectorAll('.size-btn').forEach(btn => btn.classList.remove('selected'));
-  document.getElementById('productModal').classList.add('open');
-}-${subcategory}`;
-  const label = document.querySelector(`[onclick="openProductGallery('${category}', '${subcategory}')"]`)?.textContent || subcategory;
-  const desc = defaultDescriptions[key] || { es: 'Producto Kapital', en: 'Kapital Product' };
-  document.getElementById('drawerCat').textContent = label;
-  document.getElementById('drawerTitle').textContent = label;
   document.getElementById('drawerDesc').textContent = desc[currentLanguage];
   document.querySelectorAll('.size-btn').forEach(btn => btn.classList.remove('selected'));
   document.getElementById('productModal').classList.add('open');
