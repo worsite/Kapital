@@ -1095,6 +1095,38 @@ button { cursor: pointer; font-family: inherit; }
   </div>
 </section>
 
+<!-- COMENTARIOS -->
+<section class="testimonials" id="comentarios">
+  <h2 class="testimonials__title" data-es="COMENTARIOS DE CLIENTES" data-en="CUSTOMER COMMENTS">COMENTARIOS DE CLIENTES</h2>
+  <div class="testimonials-grid">
+    <div class="testimonial-card">
+      <div class="testimonial-stars">⭐⭐⭐⭐⭐</div>
+      <p class="testimonial-text">La calidad es muy buena y la ropa queda perfecta</p>
+      <p class="testimonial-author">- María González</p>
+    </div>
+    <div class="testimonial-card">
+      <div class="testimonial-stars">⭐⭐⭐⭐⭐</div>
+      <p class="testimonial-text">Me encantó la atención por WhatsApp fue muy rápido</p>
+      <p class="testimonial-author">- Juan Rodríguez</p>
+    </div>
+    <div class="testimonial-card">
+      <div class="testimonial-stars">⭐⭐⭐⭐⭐</div>
+      <p class="testimonial-text">Los mejores accesorios que he encontrado muy recomendado</p>
+      <p class="testimonial-author">- Carolina Ruiz</p>
+    </div>
+    <div class="testimonial-card">
+      <div class="testimonial-stars">⭐⭐⭐⭐⭐</div>
+      <p class="testimonial-text">Cómodo y duradero volvería a comprar sin dudarlo</p>
+      <p class="testimonial-author">- Diego López</p>
+    </div>
+  </div>
+</section>
+
+<!-- CRÉDITO KAFEL -->
+<section class="kafel-section">
+  <p class="kafel-text">Desarrollado por <a href="javascript:abrirWhatsAppKafel()" class="kafel-link">Kafel</a></p>
+</section>
+
 <!-- UBICACIÓN (GOOGLE MAPS) -->
 <section class="ubicacion" id="ubicacion">
   <h2 class="ubicacion__title" data-es="UBICACIÓN" data-en="LOCATION">UBICACIÓN</h2>
@@ -1269,6 +1301,13 @@ function sendToWhatsApp() {
   window.open(waLink, '_blank');
 }
 
+function abrirWhatsAppKafel() {
+  const phone = "573001234567";
+  const message = "Hola, vengo de Kapital y me interesa conocer mas de Kafel";
+  const waLink = `https://wa.me/${phone}?text=${encodeURIComponent(message)}`;
+  window.open(waLink, '_blank');
+}
+
 function openBag() {
   alert(currentLanguage === 'es' ? 'Bag abierto' : 'Bag opened');
 }
@@ -1283,13 +1322,6 @@ setInterval(() => {
     document.getElementById('drawerDesc').textContent = desc[currentLanguage];
   }
 }, 100);
-
-function abrirWhatsAppKafel() {
-  const phone = "573001234567";
-  const message = "Hola, vengo de Kapital y me interesa conocer mas de Kafel";
-  const waLink = `https://wa.me/${phone}?text=${encodeURIComponent(message)}`;
-  window.open(waLink, '_blank');
-}
 
 </script>
 
