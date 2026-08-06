@@ -547,6 +547,98 @@ button { cursor: pointer; font-family: inherit; }
   box-shadow: 0 0 50px rgba(212, 175, 55, 0.9);
 }
 
+/* ═══════════════════════════════════════════════
+   TESTIMONIALS
+   ═══════════════════════════════════════════════ */
+.testimonials {
+  position: relative;
+  z-index: var(--z-base);
+  padding: 88px 5vw 60px;
+  background: rgba(0, 0, 0, 0.8);
+}
+
+.testimonials__title {
+  font-family: var(--font-display);
+  font-size: clamp(2.2rem, 5vw, 3.8rem);
+  font-weight: 600;
+  margin-bottom: 60px;
+  color: var(--ink);
+}
+
+.testimonials-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 24px;
+  margin-bottom: 40px;
+}
+
+.testimonial-card {
+  background: var(--surface-2);
+  border-left: 4px solid var(--neon);
+  padding: 28px;
+  border-radius: 2px;
+  transition: transform var(--dur-fast), box-shadow var(--dur-fast);
+}
+
+.testimonial-card:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 12px 40px rgba(212, 175, 55, 0.15);
+}
+
+.testimonial-stars {
+  color: var(--neon);
+  font-size: 1rem;
+  margin-bottom: 14px;
+  letter-spacing: 2px;
+}
+
+.testimonial-text {
+  font-size: 0.95rem;
+  line-height: 1.65;
+  margin-bottom: 18px;
+  color: var(--ink-2);
+}
+
+.testimonial-author {
+  font-weight: 600;
+  color: var(--ink);
+  font-size: 0.85rem;
+  letter-spacing: 0.05em;
+}
+
+/* ═══════════════════════════════════════════════
+   KAFEL CREDIT
+   ═══════════════════════════════════════════════ */
+.kafel-section {
+  position: relative;
+  z-index: var(--z-base);
+  padding: 40px 5vw;
+  background: rgba(0, 0, 0, 0.8);
+  text-align: center;
+  border-top: 1px solid var(--rule);
+  border-bottom: 1px solid var(--rule);
+}
+
+.kafel-text {
+  font-size: 1rem;
+  color: var(--ink-2);
+  font-weight: 500;
+}
+
+.kafel-link {
+  color: var(--neon);
+  text-decoration: none;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all var(--dur-fast);
+}
+
+.kafel-link:hover {
+  filter: brightness(1.2);
+  text-decoration: underline;
+}
+
+
 .product-drawer {
   position: relative;
   background: var(--surface);
@@ -1003,14 +1095,6 @@ button { cursor: pointer; font-family: inherit; }
   </div>
 </section>
 
-<!-- DESCUENTOS -->
-<section class="sale" id="descuentos">
-  <h2 class="sale__title" data-es="DESCUENTOS" data-en="SALE">DESCUENTOS</h2>
-  <div class="sale-grid" id="saleGrid">
-    <div style="height: 200px; padding: 20px; display: flex; align-items: center; justify-content: center; color: var(--ink-3);" data-es="Prendas en descuento próximamente" data-en="Discounted items coming soon">Prendas en descuento próximamente</div>
-  </div>
-</section>
-
 <!-- UBICACIÓN (GOOGLE MAPS) -->
 <section class="ubicacion" id="ubicacion">
   <h2 class="ubicacion__title" data-es="UBICACIÓN" data-en="LOCATION">UBICACIÓN</h2>
@@ -1199,6 +1283,14 @@ setInterval(() => {
     document.getElementById('drawerDesc').textContent = desc[currentLanguage];
   }
 }, 100);
+
+function abrirWhatsAppKafel() {
+  const phone = "573001234567";
+  const message = "Hola, vengo de Kapital y me interesa conocer mas de Kafel";
+  const waLink = `https://wa.me/${phone}?text=${encodeURIComponent(message)}`;
+  window.open(waLink, '_blank');
+}
+
 </script>
 
 </body>
