@@ -533,6 +533,9 @@ button { cursor: pointer; font-family: inherit; }
   text-align: center;
   padding: 12px;
   border-radius: 2px;
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
 }
 
 .gallery-grid-item:hover {
@@ -545,6 +548,7 @@ button { cursor: pointer; font-family: inherit; }
   border-width: 3px;
   opacity: 1;
   box-shadow: 0 0 50px rgba(212, 175, 55, 0.9);
+  background-color: var(--neon);
 }
 
 /* ═══════════════════════════════════════════════
@@ -1220,7 +1224,6 @@ function openProductGallery(category, subcategory) {
 }
 
 function showGalleryModal(label) {
-  // Create gallery modal if it doesn't exist
   let modal = document.getElementById('galleryModal');
   if (!modal) {
     modal = document.createElement('div');
@@ -1230,26 +1233,42 @@ function showGalleryModal(label) {
       <div class="gallery-modal-content">
         <button class="gallery-modal-close" onclick="closeGalleryModal()">✕</button>
         <h3 class="gallery-modal-title" id="galleryTitle"></h3>
-        <p id="galleryInst" style="margin-bottom: 24px; color: var(--ink-2);">Haz click en una prenda para seleccionar talla</p>
+        <p id="galleryInst" style="margin-bottom: 24px; color: var(--ink-2);"></p>
         <div class="gallery-grid" id="galleryGrid"></div>
       </div>
     `;
     document.body.appendChild(modal);
   }
 
-  // Update title and show modal
   document.getElementById('galleryTitle').textContent = label;
   document.getElementById('galleryInst').textContent = currentLanguage === 'es' ? 'Haz click en una prenda para seleccionar talla' : 'Click on a product to select size';
 
-  // Generate 6 product images
+  const key = `${currentCategory}-${currentSubcategory}`;
+  const images = typeof productImages !== 'undefined' && productImages[key] ? productImages[key] : [];
+
   const grid = document.getElementById('galleryGrid');
   grid.innerHTML = '';
-  for (let i = 1; i <= 6; i++) {
-    const item = document.createElement('div');
-    item.className = 'gallery-grid-item';
-    item.textContent = `Prenda ${i}`;
-    item.onclick = () => selectGalleryItem(i, label);
-    grid.appendChild(item);
+
+  if (images.length === 0) {
+    // Fallback: mostrar placeholders si no hay imágenes
+    for (let i = 1; i <= 6; i++) {
+      const item = document.createElement('div');
+      item.className = 'gallery-grid-item';
+      item.style.background = 'linear-gradient(135deg, var(--neon) 0%, rgba(212, 175, 55, 0.8) 100%)';
+      item.textContent = `Prenda ${i}`;
+      item.onclick = () => selectGalleryItem(i, label);
+      grid.appendChild(item);
+    }
+  } else {
+    // Mostrar imágenes reales
+    images.forEach((imgSrc, index) => {
+      const item = document.createElement('div');
+      item.className = 'gallery-grid-item';
+      item.style.backgroundImage = `url('${imgSrc}')`;
+      item.title = `Prenda ${index + 1}`;
+      item.onclick = () => selectGalleryItem(index + 1, label);
+      grid.appendChild(item);
+    });
   }
 
   modal.classList.add('open');
