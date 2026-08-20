@@ -1244,7 +1244,12 @@ function showGalleryModal(label) {
   document.getElementById('galleryInst').textContent = currentLanguage === 'es' ? 'Haz click en una prenda para seleccionar talla' : 'Click on a product to select size';
 
   const key = `${currentCategory}-${currentSubcategory}`;
-  const images = typeof productImages !== 'undefined' && productImages[key] ? productImages[key] : [];
+  let images = [];
+
+  // Buscar imágenes en productImages (estructura: productImages[key].galeria)
+  if (typeof productImages !== 'undefined' && productImages[key]) {
+    images = productImages[key].galeria || [];
+  }
 
   const grid = document.getElementById('galleryGrid');
   grid.innerHTML = '';
@@ -1265,6 +1270,8 @@ function showGalleryModal(label) {
       const item = document.createElement('div');
       item.className = 'gallery-grid-item';
       item.style.backgroundImage = `url('${imgSrc}')`;
+      item.style.backgroundSize = 'cover';
+      item.style.backgroundPosition = 'center';
       item.title = `Prenda ${index + 1}`;
       item.onclick = () => selectGalleryItem(index + 1, label);
       grid.appendChild(item);
