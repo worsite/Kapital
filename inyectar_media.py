@@ -2,32 +2,43 @@
 import os
 import base64
 import re
+import glob
 from PIL import Image
 from io import BytesIO
 
 # Configuración
 MEDIA_DIR = "media"
-HTML_INPUT = "index_backup"
+
+# Buscar automáticamente archivo HTML
+html_files = glob.glob('index*')
+if not html_files:
+    print("❌ Error: No se encontró archivo index")
+    exit(1)
+
+HTML_INPUT = html_files[0]
 HTML_OUTPUT = "index.html"
 
-# Mapeo de categorías encontradas en las imágenes
-CATEGORIAS = [
-    "Básicas",
-    "Bermudas",
-    "Busos Capota",
-    "Conjuntos Hombre",
-    "Conjuntos Mujer",
-    "Gorras",
-    "Jeans",
-    "Kapital",
-    "Manga Siza",
-    "Oversize",
-    "Pantalonetas",
-    "Polos",
-    "Relojes",
-    "Sudaderas",
-    "Zapatos"
-]
+print(f"✓ Usando archivo: {HTML_INPUT}\n")
+
+# MAPEO CRUCIAL: nombre de archivo → (categoría padre, subcategoría-id)
+MAPEO_CATEGORIAS = {
+    'Oversize': ('camisas', 'oversize'),
+    'Básicas': ('camisas', 'basicas'),
+    'Polos': ('camisas', 'polos'),
+    'Manga Siza': ('camisas', 'manga-siza'),
+    'Bermudas': ('pantalones', 'bermudas'),
+    'Pantalonetas': ('pantalones', 'pantalonetas'),
+    'Vaqueros': ('pantalones', 'vaqueros'),
+    'Jeans': ('pantalones', 'jeans'),
+    'Sudaderas': ('hoodies', 'sudaderas'),
+    'Busos Capota': ('hoodies', 'busos-capota'),
+    'Conjuntos Hombre': ('conjuntos', 'hombre'),
+    'Conjuntos Mujer': ('conjuntos', 'mujer'),
+    'Gorras': ('accesorios', 'gorras'),
+    'Relojes': ('accesorios', 'relojes'),
+    'Zapatos': ('accesorios', 'zapatos'),
+    'Kapital': ('kapital', 'kapital'),
+}
 
 def comprimir_imagen(ruta_imagen, max_ancho=900, calidad=82):
     """Comprime imagen con Pillow y retorna base64"""
@@ -65,42 +76,53 @@ def comprimir_imagen(ruta_imagen, max_ancho=900, calidad=82):
         return None
 
 def obtener_imagenes_por_categoria():
-    """Organiza imágenes por categoría"""
+    """Organiza imágenes por categoría usando el mapeo"""
     imagenes_por_categoria = {}
 
     if not os.path.exists(MEDIA_DIR):
         print(f"❌ Error: La carpeta '{MEDIA_DIR}' no existe")
         return None
 
-    archivos = sorted([f for f in os.listdir(MEDIA_DIR) if f.lower().endswith('.png')])
+    archivos = sorted([f for f in os.listdir(MEDIA_DIR) if f.lower().endswith(('.png', '.jpg', '.jpeg'))])
 
     if not archivos:
-        print(f"❌ Error: No hay archivos PNG en '{MEDIA_DIR}'")
+        print(f"❌ Error: No hay archivos de imagen en '{MEDIA_DIR}'")
         return None
 
-    # Agrupar por categoría
+    # Agrupar por categoría usando el mapeo
     for archivo in archivos:
         # Detectar categoría (todo antes de "fotoX")
-        match = re.match(r'(.+?)\s+foto(\d+)\.png', archivo, re.IGNORECASE)
+        match = re.match(r'(.+?)\s+foto(\d+)\.(png|jpg|jpeg)', archivo, re.IGNORECASE)
         if match:
-            categoria = match.group(1).strip()
+            categoria_nombre = match.group(1).strip()
             numero_foto = int(match.group(2))
 
-            if categoria not in imagenes_por_categoria:
-                imagenes_por_categoria[categoria] = {}
+            # Buscar en el mapeo
+            if categoria_nombre in MAPEO_CATEGORIAS:
+                cat_padre, subcat_id = MAPEO_CATEGORIAS[categoria_nombre]
+                key = f"{cat_padre}-{subcat_id}"
 
-            ruta_completa = os.path.join(MEDIA_DIR, archivo)
-            imagenes_por_categoria[categoria][numero_foto] = {
-                'archivo': archivo,
-                'ruta': ruta_completa
-            }
+                if key not in imagenes_por_categoria:
+                    imagenes_por_categoria[key] = {
+                        'nombre': categoria_nombre,
+                        'categoria_padre': cat_padre,
+                        'subcat_id': subcat_id,
+                        'fotos': {}
+                    }
+
+                ruta_completa = os.path.join(MEDIA_DIR, archivo)
+                imagenes_por_categoria[key]['fotos'][numero_foto] = {
+                    'archivo': archivo,
+                    'ruta': ruta_completa
+                }
+            else:
+                print(f"⚠️  Advertencia: '{categoria_nombre}' no está en el mapeo")
 
     return imagenes_por_categoria
 
 def inyectar_imagenes_en_html(imagenes_por_categoria):
     """Inyecta las imágenes en base64 dentro del HTML"""
 
-    # Leer HTML original
     if not os.path.exists(HTML_INPUT):
         print(f"❌ Error: No existe {HTML_INPUT}")
         return False
@@ -119,24 +141,23 @@ def inyectar_imagenes_en_html(imagenes_por_categoria):
 
     total_imagenes = 0
 
-    for categoria in sorted(imagenes_por_categoria.keys()):
-        fotos = imagenes_por_categoria[categoria]
+    for key in sorted(imagenes_por_categoria.keys()):
+        info = imagenes_por_categoria[key]
+        fotos = info['fotos']
+        nombre = info['nombre']
 
-        # Convertir categoría a ID válido (lowercase, sin espacios, con guiones)
-        categoria_id = categoria.lower().replace(' ', '-')
-
-        js_images += f"  '{categoria_id}': {{\n"
-        js_images += f"    nombre: '{categoria}',\n"
+        js_images += f"  '{key}': {{\n"
+        js_images += f"    nombre: '{nombre}',\n"
         js_images += f"    principal: null,\n"
         js_images += f"    galeria: [\n"
 
         # Procesar fotos en orden
         for numero_foto in sorted(fotos.keys()):
-            info = fotos[numero_foto]
-            print(f"✓ {info['archivo']} comprimido")
+            foto_info = fotos[numero_foto]
+            print(f"✓ {foto_info['archivo']} comprimido")
 
             # Comprimir imagen
-            img_base64 = comprimir_imagen(info['ruta'])
+            img_base64 = comprimir_imagen(foto_info['ruta'])
             if img_base64:
                 js_images += f"      '{img_base64}',\n"
                 total_imagenes += 1
@@ -178,9 +199,10 @@ def inyectar_imagenes_en_html(imagenes_por_categoria):
     print(f"   Total de imágenes: {total_imagenes}")
     print(f"   Categorías: {len(imagenes_por_categoria)}\n")
 
-    for categoria in sorted(imagenes_por_categoria.keys()):
-        fotos = imagenes_por_categoria[categoria]
-        print(f"   ✓ {categoria}: {len(fotos)} fotos")
+    for key in sorted(imagenes_por_categoria.keys()):
+        info = imagenes_por_categoria[key]
+        fotos = info['fotos']
+        print(f"   ✓ {key}: {len(fotos)} fotos")
 
     print(f"\n✨ Archivo guardado: {HTML_OUTPUT}\n")
 
