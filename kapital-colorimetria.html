@@ -34,7 +34,7 @@
     body {
       font-family: 'Inter', sans-serif;
       background: var(--bg-light);
-      background-image: url('data:image/svg+xml;utf8,<svg width="100" height="100" xmlns="http://www.w3.org/2000/svg"><defs><pattern id="hexagons" x="0" y="0" width="100" height="100" patternUnits="userSpaceOnUse"><path d="M50,10 L90,30 L90,70 L50,90 L10,70 L10,30 Z" stroke="%232A2A2A" stroke-width="1" fill="none" opacity="0.08"/></pattern></defs><rect width="100" height="100" fill="var(--bg-light)"/><rect width="100" height="100" fill="url(%23hexagons)"/></svg>');
+      background-image: url('data:image/svg+xml;utf8,<svg width="120" height="140" xmlns="http://www.w3.org/2000/svg"><defs><pattern id="hexagons" x="0" y="0" width="120" height="140" patternUnits="userSpaceOnUse"><g stroke="%23333333" stroke-width="1.2" fill="none" opacity="0.12"><path d="M60,20 L100,45 L100,95 L60,120 L20,95 L20,45 Z"/><path d="M60,60 L100,85 L100,135 L60,160 L20,135 L20,85 Z"/></g></pattern></defs><rect width="100%" height="100%" fill="var(--bg-light)"/><rect width="100%" height="100%" fill="url(%23hexagons)"/></svg>');
       background-attachment: fixed;
       color: var(--text-dark);
       overflow-x: hidden;
@@ -103,6 +103,7 @@
       text-transform: uppercase;
     }
     .navbar-logo span { color: var(--accent); }
+    .navbar-logo-img { height: 40px; width: auto; object-fit: contain; }
     .navbar-nav {
       display: flex;
       align-items: center;
@@ -752,7 +753,8 @@
 <body>
 
   <nav class="navbar" id="navbar">
-    <a href="#" class="navbar-logo">KAPITAL</a>
+    <a href="#" class="navbar-logo">
+      <img src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAwIiBoZWlnaHQ9IjY4IiB2aWV3Qm94PSIwIDAgMjAwIDY4IiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciPjx0ZXh0IHg9IjEwMCIgeT0iNDIiIGZvbnQtZmFtaWx5PSJDaW56ZWwiIGZvbnQtc2l6ZT0iNDgiIGZvbnQtd2VpZ2h0PSI3MDAiIHRleHQtYW5jaG9yPSJtaWRkbGUiIGZpbGw9IiNGOEY4RjgiIGxldHRlci1zcGFjaW5nPSIzIj5LQVBJVEFMPC90ZXh0Pjwvc3ZnPg==" alt="KAPITAL" class="navbar-logo-img"/></a>
     <ul class="navbar-nav">
       <li><a href="#catalogo" onclick="switchTab('hombre')">Hombre</a></li>
       <li><a href="#catalogo" onclick="switchTab('mujer')">Mujer</a></li>
